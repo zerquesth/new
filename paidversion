@@ -659,43 +659,84 @@ local Toggle26 = Tabs.Main:AddToggle("MyToggle",
 
 local Section4 = Tabs.Main:AddSection("Target")
 
-local Input1 = Tabs.Main:AddInput("Input", {
-    Title = "Target Player",
-    Placeholder = "Type Here!",
-    Numeric = false, -- Only allows numbers
-    Finished = true, -- Only calls callback when you press enter
-    Callback = function(Value)
-        targetPlayerName = Value
-    end
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- Создаем Dropdown для выбора цели
+local Dropdown = Tabs.Main:AddDropdown("TargetDropdown", {
+    Title = "Выберите цель для фокуса",
+    Values = {}, -- Заполнится динамически
+    Multi = false,
+    Default = nil,
 })
 
-local Toggle8 = Tabs.Main:AddToggle("MyToggle", 
-{
-    Title = "Auto Kill", 
+local Toggle = Tabs.Main:AddToggle("FocusToggle", {
+    Title = "Фокусироваться на цели",
     Default = false,
     Callback = function(state)
-	autoKill = state
-    
-    if connection then
-        connection:Disconnect()
-        connection = nil
-    end
-    
-    if state then
-        -- РћСЃРЅРѕРІРЅРѕР№ С†РёРєР» Р°С‚Р°РєРё
-        connection = game:GetService("RunService").Heartbeat:Connect(attackPlayers)
+        focusActive = state
         
-        -- РћР±СЂР°Р±РѕС‚С‡РёРє РІРѕР·СЂРѕР¶РґРµРЅРёСЏ
-        game.Players.LocalPlayer.CharacterAdded:Connect(function()
-            if autoKill then
-                task.wait(0.5) -- РќРµР±РѕР»СЊС€Р°СЏ Р·Р°РґРµСЂР¶РєР° РїРѕСЃР»Рµ РІРѕР·СЂРѕР¶РґРµРЅРёСЏ
-                attackPlayers()
+        if state then
+            local targetName = Dropdown.Value
+            if not targetName then
+                warn("⚠️ Игрок не выбран!")
+                Toggle:SetValue(false)
+                return
             end
-        end)
+            
+            local targetPlayer = Players:FindFirstChild(targetName)
+            if not targetPlayer then
+                warn("🚨 Выбранный игрок не найден!")
+                Toggle:SetValue(false)
+                return
+            end
+            
+            -- Сохраняем цель в глобальную переменную
+            _G.TargetPlayer = targetPlayer
+            
+            -- Обработчик смены персонажа цели
+            _G.characterConnection = _G.TargetPlayer.CharacterAdded:Connect(function()
+                _G.TargetCharacter = _G.TargetPlayer.Character
+                warn("🎯 Цель возродилась, фокус сохранен")
+            end)
+            
+            -- Устанавливаем текущего персонажа как цель
+            if _G.TargetPlayer.Character then
+                _G.TargetCharacter = _G.TargetPlayer.Character
+            end
+            
+            warn("🎯 Фокус установлен на: "..targetName)
+        else
+            -- Выключаем фокус
+            if _G.characterConnection then 
+                _G.characterConnection:Disconnect() 
+            end
+            _G.TargetPlayer = nil
+            _G.TargetCharacter = nil
+            warn("🔴 Фокус сброшен")
+        end
     end
-end
 })
 
+-- Функция обновления списка игроков
+local function updatePlayerList()
+    local playerNames = {}
+    
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then -- Исключаем себя из списка
+            table.insert(playerNames, player.Name)
+        end
+    end
+    
+    Dropdown:SetValues(playerNames)
+end
+
+-- Инициализация и обработчики
+updatePlayerList()
+Players.PlayerAdded:Connect(updatePlayerList)
+Players.PlayerRemoving:Connect(updatePlayerList)
+
+warn("ℹ️ Выберите цель и включите фокус для нацеливания")
 local targetPlayerName = ""
 local cameraConnection = nil
 local cameraOffset = CFrame.new(0, 3, -8) -- РљР°РјРµСЂР° СЃР·Р°РґРё Рё РЅРµРјРЅРѕРіРѕ СЃРІРµСЂС…Сѓ
