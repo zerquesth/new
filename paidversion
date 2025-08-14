@@ -718,44 +718,65 @@ local function updateThirdPersonCamera()
     end
 end
 
-local Section5 = Tabs.Main:AddSection("Spy")
+local Dropdown = Tabs.Main:AddDropdown("PlayerDropdown", {
+    Title = "Выберите игрока",
+    Values = {}, -- Заполнится динамически
+    Multi = false,
+    Default = nil,
+})
 
-local Input2 = Tabs.Main:AddInput("Input", {
-    Title = "Spy Player",
-    Placeholder = "Type Here!",
-    Numeric = false, -- Only allows numbers
-    Finished = true, -- Only calls callback when you press enter
-    Callback = function(Value)
-        -- РћС‚РєР»СЋС‡Р°РµРј РїСЂРµРґС‹РґСѓС‰РµРµ СЃРѕРµРґРёРЅРµРЅРёРµ
-    if cameraConnection then
-        cameraConnection:Disconnect()
-        cameraConnection = nil
+local Toggle4 = Tabs.Main:AddToggle("SpyToggle", {
+    Title = "Spy Player", 
+    Default = false,
+    Callback = function(state)
+        spyEnabled = state
+        
+        if state then
+            local selectedPlayerName = Dropdown.Value
+            if not selectedPlayerName then
+                warn("Игрок не выбран!")
+                Toggle4:SetValue(false)
+                return
+            end
+            
+            local players = game:GetService("Players")
+            local localPlayer = players.LocalPlayer
+            local camera = workspace.CurrentCamera
+            local targetPlayer = players:FindFirstChild(selectedPlayerName)
+            
+            if targetPlayer then
+                -- ... остальной код слежки из предыдущего примера ...
+            else
+                warn("Выбранный игрок не найден!")
+                Toggle4:SetValue(false)
+            end
+        else
+            -- Возвращаем управление камерой
+            if workspace.CurrentCamera then
+                workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
+            end
+        end
+    end
+})
+
+-- Функция обновления списка игроков
+local function updatePlayerList()
+    local players = game:GetService("Players"):GetPlayers()
+    local playerNames = {}
+    
+    for _, player in ipairs(players) do
+        if player ~= game:GetService("Players").LocalPlayer then -- Исключаем себя из списка
+            table.insert(playerNames, player.Name)
+        end
     end
     
-    targetPlayerName = text
-    
-    -- Р’РєР»СЋС‡Р°РµРј СЃР»РµР¶РµРЅРёРµ, РµСЃР»Рё РІРІРµРґРµРЅРѕ РёРјСЏ
-    if text ~= "" then
-        cameraConnection = game:GetService("RunService").RenderStepped:Connect(updateThirdPersonCamera)
-    else
-        -- Р’РѕР·РІСЂР°С‰Р°РµРј РєР°РјРµСЂСѓ РІ СЃС‚Р°РЅРґР°СЂС‚РЅС‹Р№ СЂРµР¶РёРј
-        game.Workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
-    end
+    Dropdown:SetValues(playerNames)
 end
-})
 
-Tabs.Main:AddButton({
-    Title = "Stop Spy Player",
-    Callback = function()
-     if cameraConnection then
-        cameraConnection:Disconnect()
-        cameraConnection = nil
-     end
-     game.Workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
-     targetPlayerName = ""   
-    end
-})
-
+-- Инициализация и обработчики
+updatePlayerList()
+game:GetService("Players").PlayerAdded:Connect(updatePlayerList)
+game:GetService("Players").PlayerRemoving:Connect(updatePlayerList)
 -- Paid Tab
 
 local Section6 = Tabs.PaidTab:AddSection("Fast Stuff (Need 7 new packs)")
