@@ -664,17 +664,17 @@ local LocalPlayer = Players.LocalPlayer
 
 -- Создаем Dropdown для выбора цели
 local Dropdown = Tabs.Main:AddDropdown("TargetDropdown", {
-    Title = "Выберите цель для фокуса",
-    Values = {}, -- Заполнится динамически
+    Title = "Выберите цель",
+    Values = {},
     Multi = false,
     Default = nil,
 })
 
-local Toggle = Tabs.Main:AddToggle("FocusToggle", {
-    Title = "Фокусироваться на цели",
+local Toggle = Tabs.Main:AddToggle("TargetLockToggle", {
+    Title = "Закрепить цель",
     Default = false,
     Callback = function(state)
-        focusActive = state
+        targetLockActive = state
         
         if state then
             local targetName = Dropdown.Value
@@ -686,7 +686,7 @@ local Toggle = Tabs.Main:AddToggle("FocusToggle", {
             
             local targetPlayer = Players:FindFirstChild(targetName)
             if not targetPlayer then
-                warn("🚨 Выбранный игрок не найден!")
+                warn("🚨 Игрок не найден!")
                 Toggle:SetValue(false)
                 return
             end
@@ -694,29 +694,47 @@ local Toggle = Tabs.Main:AddToggle("FocusToggle", {
             -- Сохраняем цель в глобальную переменную
             _G.TargetPlayer = targetPlayer
             
-            -- Обработчик смены персонажа цели
-            _G.characterConnection = _G.TargetPlayer.CharacterAdded:Connect(function()
-                _G.TargetCharacter = _G.TargetPlayer.Character
-                warn("🎯 Цель возродилась, фокус сохранен")
+            -- Обработчик появления персонажа у цели
+            _G.characterConnection = targetPlayer.CharacterAdded:Connect(function(character)
+                _G.TargetCharacter = character
+                warn("🎯 Персонаж цели обновлен: "..targetName)
             end)
             
-            -- Устанавливаем текущего персонажа как цель
-            if _G.TargetPlayer.Character then
-                _G.TargetCharacter = _G.TargetPlayer.Character
+            -- Устанавливаем текущего персонажа как цель (если есть)
+            if targetPlayer.Character then
+                _G.TargetCharacter = targetPlayer.Character
             end
             
-            warn("🎯 Фокус установлен на: "..targetName)
+            warn("🔒 Цель закреплена: "..targetName)
         else
-            -- Выключаем фокус
+            -- Отключаем закрепление
             if _G.characterConnection then 
                 _G.characterConnection:Disconnect() 
             end
             _G.TargetPlayer = nil
             _G.TargetCharacter = nil
-            warn("🔴 Фокус сброшен")
+            warn("🟢 Цель сброшена")
         end
     end
 })
+
+-- Обновляем список игроков
+local function updatePlayerList()
+    local playerNames = {}
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            table.insert(playerNames, player.Name)
+        end
+    end
+    Dropdown:SetValues(playerNames)
+end
+
+-- Инициализация
+updatePlayerList()
+Players.PlayerAdded:Connect(updatePlayerList)
+Players.PlayerRemoving:Connect(updatePlayerList)
+
+warn("ℹ️ Выберите цель и активируйте переключатель")
 
 -- Функция обновления списка игроков
 local function updatePlayerList()
