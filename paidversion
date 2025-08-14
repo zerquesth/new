@@ -40,7 +40,7 @@ local musclelegendid = 3623096087
 -- Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ РїСЂРѕРІРµСЂРєР° РґР»СЏ РЅРѕРІС‹С… РёРіСЂРѕРєРѕРІ (РµСЃР»Рё СЌС‚Рѕ FE)
 game.Players.PlayerAdded:Connect(function(player)
     if not whitelist[player.UserId] then
-        player:Kick("в›” You are not whitelisted!")
+        player:Kick("” You are not whitelisted!")
     end
 end)
 
@@ -89,11 +89,11 @@ Tabs.Credits:AddParagraph({
 })
 
 Tabs.Credits:AddParagraph({
-    Title = "zetka hub | paid version cost 350в‚± / 500 rbx",
+    Title = "zetka hub | paid version cost 350 rub / 500 rbx",
 })
 
 Tabs.Credits:AddParagraph({
-    Title = "Join to my russian discord server! рџќ",
+    Title = "Join to my russian discord server!",
 })
 
 Tabs.Credits:AddButton({
@@ -2159,15 +2159,15 @@ local function updateAllStats()
     local EvilKarmaStat = player.evilKarma.Value
     local GoodKarmaStat = player.goodKarma.Value
 
-    StrengthDisplay:SetTitle("рџ’ЄStrength: " .. StrengthStat)
-    DurabilityDisplay:SetTitle("рџ‘ЉDurability: " .. DurabilityStat)
-    AgilityDisplay:SetTitle("вљЎAgility: " .. AgilityStat)
-    RebirthsDisplay:SetTitle("в™»пёЏRebirths: " .. RebirthsStat)
-    KillsDisplay:SetTitle("рџ’ЂKills: " .. KillsStat)
-    BrawlsDisplay:SetTitle("вљ”пёЏBrawls: " .. BrawlsStat)
-    GemsDisplay:SetTitle("рџ’ЋGems: " .. GemsStat)
-    EvilKarmaDisplay:SetTitle("рџ€Evil Karma: " .. EvilKarmaStat)
-    GoodKarmaDisplay:SetTitle("рџ‡Good Karma: " .. GoodKarmaStat)
+    StrengthDisplay:SetTitle("Strength: " .. StrengthStat)
+    DurabilityDisplay:SetTitle("Durability: " .. DurabilityStat)
+    AgilityDisplay:SetTitle("Agility: " .. AgilityStat)
+    RebirthsDisplay:SetTitle("Rebirths: " .. RebirthsStat)
+    KillsDisplay:SetTitle("Kills: " .. KillsStat)
+    BrawlsDisplay:SetTitle("Brawls: " .. BrawlsStat)
+    GemsDisplay:SetTitle("Gems: " .. GemsStat)
+    EvilKarmaDisplay:SetTitle("Evil Karma: " .. EvilKarmaStat)
+    GoodKarmaDisplay:SetTitle("Good Karma: " .. GoodKarmaStat)
 end
 
 task.spawn(function()
