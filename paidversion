@@ -718,65 +718,94 @@ local function updateThirdPersonCamera()
     end
 end
 
-local Dropdown = Tabs.Main:AddDropdown("PlayerDropdown", {
-    Title = "Выберите игрока",
-    Values = {}, -- Заполнится динамически
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+-- Создаем Dropdown для выбора игрока
+local PlayerDropdown = Tabs.Main:AddDropdown("PlayerSpyDropdown", {
+    Title = "Выберите игрока для слежки",
+    Values = {},
     Multi = false,
     Default = nil,
 })
 
-local Toggle4 = Tabs.Main:AddToggle("SpyToggle", {
-    Title = "Spy Player", 
+-- Создаем Toggle для активации слежки
+local SpyToggle = Tabs.Main:AddToggle("SpyPlayerToggle", {
+    Title = "Следить за игроком",
     Default = false,
     Callback = function(state)
-        spyEnabled = state
+        spyActive = state
         
         if state then
-            local selectedPlayerName = Dropdown.Value
-            if not selectedPlayerName then
-                warn("Игрок не выбран!")
-                Toggle4:SetValue(false)
+            local targetName = PlayerDropdown.Value
+            if not targetName then
+                warn("⚠️ Сначала выберите игрока!")
+                SpyToggle:SetValue(false)
                 return
             end
             
-            local players = game:GetService("Players")
-            local localPlayer = players.LocalPlayer
-            local camera = workspace.CurrentCamera
-            local targetPlayer = players:FindFirstChild(selectedPlayerName)
+            local TargetPlayer = Players:FindFirstChild(targetName)
+            if not TargetPlayer then
+                warn("🚨 Игрок не найден!")
+                SpyToggle:SetValue(false)
+                return
+            end
             
-            if targetPlayer then
-                -- ... остальной код слежки из предыдущего примера ...
-            else
-                warn("Выбранный игрок не найден!")
-                Toggle4:SetValue(false)
+            -- Функция слежения за персонажем
+            local function trackCharacter()
+                if TargetPlayer.Character and TargetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                    Camera.CameraType = Enum.CameraType.Scriptable
+                    Camera.CFrame = CFrame.new(
+                        TargetPlayer.Character.HumanoidRootPart.Position + Vector3.new(0, 3, -5),
+                        TargetPlayer.Character.HumanoidRootPart.Position + Vector3.new(0, 2, 0)
+                    )
+                end
             end
+            
+            -- Запускаем слежение
+            spyConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                trackCharacter()
+            end)
+            
+            -- Обработчик смены персонажа
+            characterConnection = TargetPlayer.CharacterAdded:Connect(function()
+                task.wait(1) -- Ждем полной загрузки персонажа
+                trackCharacter()
+            end)
+            
+            -- Первоначальная настройка
+            if TargetPlayer.Character then
+                trackCharacter()
+            end
+            
         else
-            -- Возвращаем управление камерой
-            if workspace.CurrentCamera then
-                workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
-            end
+            -- Выключаем слежку
+            if spyConnection then spyConnection:Disconnect() end
+            if characterConnection then characterConnection:Disconnect() end
+            Camera.CameraType = Enum.CameraType.Custom
         end
     end
 })
 
 -- Функция обновления списка игроков
 local function updatePlayerList()
-    local players = game:GetService("Players"):GetPlayers()
-    local playerNames = {}
-    
-    for _, player in ipairs(players) do
-        if player ~= game:GetService("Players").LocalPlayer then -- Исключаем себя из списка
-            table.insert(playerNames, player.Name)
+    local playerList = {}
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then -- Исключаем себя
+            table.insert(playerList, player.Name)
         end
     end
-    
-    Dropdown:SetValues(playerNames)
+    PlayerDropdown:SetValues(playerList)
 end
 
--- Инициализация и обработчики
+-- Инициализация и подписки на события
 updatePlayerList()
-game:GetService("Players").PlayerAdded:Connect(updatePlayerList)
-game:GetService("Players").PlayerRemoving:Connect(updatePlayerList)
+Players.PlayerAdded:Connect(updatePlayerList)
+Players.PlayerRemoving:Connect(updatePlayerList)
+
+-- Подсказка для пользователя
+warn("ℹ️ Выберите игрока из списка и включите тоггл для слежки")
 -- Paid Tab
 
 local Section6 = Tabs.PaidTab:AddSection("Fast Stuff (Need 7 new packs)")
