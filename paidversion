@@ -593,61 +593,21 @@ local function attackPlayers()
     end
     
     -- РђС‚Р°РєР° РІСЃРµС… РёРіСЂРѕРєРѕРІ
-Title = "Auto Fast Punch", 
-    Default = false,
-    Callback = function(state)
-        punchActive = state
-    
-        -- Удаляем предыдущее подключение, если было
-        if punchConnection then
-            punchConnection:Disconnect()
-            punchConnection = nil
-        end
-    
-        if state then
-            local player = game.Players.LocalPlayer
+    for _, target in ipairs(game.Players:GetPlayers()) do
+        if target ~= player then
+            local root = target.Character and target.Character:FindFirstChild("HumanoidRootPart")
+            local rHand = player.Character and player.Character:FindFirstChild("RightHand")
+            local lHand = player.Character and player.Character:FindFirstChild("LeftHand")
             
-            local function startFastPunch()
-                local char = player.Character or player.CharacterAdded:Wait()
-                
-                while punchActive and char and char:IsDescendantOf(workspace) do
-                    local punchTool = player.Backpack:FindFirstChild("Punch") or char:FindFirstChild("Punch")
-                    
-                    if punchTool then
-                        -- Авто-экипировка
-                        if punchTool.Parent ~= char then
-                            char:WaitForChild("Humanoid"):EquipTool(punchTool)
-                            task.wait(0.1)
-                        end
-                        
-                        -- Устанавливаем быструю скорость атаки
-                        if punchTool:FindFirstChild("attackTime") then
-                            punchTool.attackTime.Value = 0.01
-                        end
-                        
-                        -- Быстрые удары
-                        punchTool:Activate()
-                    end
-                    task.wait(0.01)
-                end
+ if root and rHand and lHand then
+                firetouchinterest(rHand, root, 1)
+                firetouchinterest(lHand, root, 1)
+                firetouchinterest(rHand, root, 0)
+                firetouchinterest(lHand, root, 0)
             end
-            
-            -- Запускаем при респавне
-            punchConnection = player.CharacterAdded:Connect(function()
-                if punchActive then
-                    task.wait(0.5) -- Даем время на появление персонажа
-                    startFastPunch()
-                end
-            end)
-            
-            startFastPunch() -- Первый запуск
-        end 
+        end
     end
-})
-
-local autoEquip = false
-local punchActive = false
-local punchConnection = nil
+end
 
 local autoKill = false
 local connection = nil
