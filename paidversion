@@ -572,7 +572,7 @@ local Toggle6 = Tabs.Main:AddToggle("MyToggle",
         -- Р—Р°РїСѓСЃРєР°РµРј СЃСЂР°Р·Сѓ Рё РїСЂРё РєР°Р¶РґРѕРј СЂРµСЃРїР°РІРЅРµ
         punchConnection = player.CharacterAdded:Connect(function()
             if punchActive then
-                task.wait(0.5) -- Р”Р°РµРј РІСЂРµРјСЏ РЅР° РїРѕСЏРІР»РµРЅРёРµ РїРµСЂСЃРѕРЅР°Р¶Р°
+                task.wait(0.05) -- Р”Р°РµРј РІСЂРµРјСЏ РЅР° РїРѕСЏРІР»РµРЅРёРµ РїРµСЂСЃРѕРЅР°Р¶Р°
                 startPunch()
             end
         end)
