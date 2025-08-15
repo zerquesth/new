@@ -565,7 +565,7 @@ local Toggle6 = Tabs.Main:AddToggle("MyToggle",
                     -- РђРєС‚РёРІР°С†РёСЏ СѓРґР°СЂР° СЃ РѕР±С‹С‡РЅРѕР№ СЃРєРѕСЂРѕСЃС‚СЊСЋ
                     punchTool:Activate()
                 end
-                task.wait(0.35) -- РРЅС‚РµСЂРІР°Р» РјРµР¶РґСѓ СѓРґР°СЂР°РјРё (РјРѕР¶РЅРѕ СЂРµРіСѓР»РёСЂРѕРІР°С‚СЊ)
+                task.wait(0.05) -- РРЅС‚РµСЂРІР°Р» РјРµР¶РґСѓ СѓРґР°СЂР°РјРё (РјРѕР¶РЅРѕ СЂРµРіСѓР»РёСЂРѕРІР°С‚СЊ)
             end
         end
         
@@ -589,7 +589,7 @@ local function attackPlayers()
     -- РќР°СЃС‚СЂРѕР№РєР° Р±С‹СЃС‚СЂРѕР№ Р°С‚Р°РєРё
     local punch = player.Backpack:FindFirstChild("Punch") or (player.Character and player.Character:FindFirstChild("Punch"))
     if punch and punch:FindFirstChild("attackTime") then
-        punch.attackTime.Value = 0.065
+        punch.attackTime.Value = 0.05
     end
     
     -- РђС‚Р°РєР° РІСЃРµС… РёРіСЂРѕРєРѕРІ
@@ -727,6 +727,11 @@ local function updatePlayerList()
         end
     end
     Dropdown:SetValues(playerNames)
+local autoEquip = false
+local punchActive = false
+local punchConnection = nil
+local autoKill = false
+local killConnection = nil
 local autoEquip = false
 local punchActive = false
 local punchConnection = nil
