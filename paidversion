@@ -727,55 +727,108 @@ local function updatePlayerList()
         end
     end
     Dropdown:SetValues(playerNames)
-end
+local autoEquip = false
+local punchActive = false
+local punchConnection = nil
+local autoKill = false
+local killConnection = nil
 
--- Инициализация
-updatePlayerList()
-Players.PlayerAdded:Connect(updatePlayerList)
-Players.PlayerRemoving:Connect(updatePlayerList)
+-- Создаём Dropdown для выбора игрока
+local playerDropdown = Tabs.Main:AddDropdown("PlayerDropdown", {
+    Title = "Выберите игрока",
+    Values = {}, -- Заполнится динамически
+    Multi = false,
+    Default = nil,
+})
 
-warn("ℹ️ Выберите цель и активируйте переключатель")
-
--- Функция обновления списка игроков
+-- Обновляем список игроков
 local function updatePlayerList()
-    local playerNames = {}
-    
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer then -- Исключаем себя из списка
-            table.insert(playerNames, player.Name)
+    local players = {}
+    for _, player in ipairs(game.Players:GetPlayers()) do
+        if player ~= game.Players.LocalPlayer then
+            table.insert(players, player.Name)
         end
     end
-    
-    Dropdown:SetValues(playerNames)
+    playerDropdown:SetValues(players)
 end
 
--- Инициализация и обработчики
+-- Инициализация и обновление при изменении
 updatePlayerList()
-Players.PlayerAdded:Connect(updatePlayerList)
-Players.PlayerRemoving:Connect(updatePlayerList)
+game.Players.PlayerAdded:Connect(updatePlayerList)
+game.Players.PlayerRemoving:Connect(updatePlayerList)
 
-warn("ℹ️ Выберите цель и включите фокус для нацеливания")
-local targetPlayerName = ""
-local cameraConnection = nil
-local cameraOffset = CFrame.new(0, 3, -8) -- РљР°РјРµСЂР° СЃР·Р°РґРё Рё РЅРµРјРЅРѕРіРѕ СЃРІРµСЂС…Сѓ
-
--- Р¤СѓРЅРєС†РёСЏ РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ РєР°РјРµСЂС‹
-local function updateThirdPersonCamera()
-    if not targetPlayerName or targetPlayerName == "" then return end
+-- Функция для атаки конкретного игрока
+local function attackSelectedPlayer()
+    local selectedPlayerName = playerDropdown.Value
+    if not selectedPlayerName then return end
     
-    local target = game.Players:FindFirstChild(targetPlayerName)
-    if target and target.Character then
+    local player = game.Players.LocalPlayer
+    local target = game.Players:FindFirstChild(selectedPlayerName)
+    
+    if not target or not target.Character then return end
+    
+    local punch = player.Backpack:FindFirstChild("Punch") or (player.Character and player.Character:FindFirstChild("Punch"))
+    if punch then
+        -- Авто-экипировка
+        if punch.Parent ~= player.Character then
+            player.Character:WaitForChild("Humanoid"):EquipTool(punch)
+            task.wait(0.1)
+        end
+        
+        -- Настройка скорости атаки
+        if punch:FindFirstChild("attackTime") then
+            punch.attackTime.Value = 0.01
+        end
+        
+        -- Атака выбранного игрока
         local root = target.Character:FindFirstChild("HumanoidRootPart")
-        if root then
-            local camera = game.Workspace.CurrentCamera
-            camera.CameraType = Enum.CameraType.Scriptable
-            
-            -- РљР°РјРµСЂР° СЃР»РµРґСѓРµС‚ Р·Р° РёРіСЂРѕРєРѕРј, РЅРѕ РѕСЃС‚Р°РµС‚СЃСЏ РїРѕР·Р°РґРё РЅРµРіРѕ
-            local targetCFrame = root.CFrame
-            camera.CFrame = targetCFrame * cameraOffset
+        local rHand = player.Character:FindFirstChild("RightHand")
+        local lHand = player.Character:FindFirstChild("LeftHand")
+        
+        if root and rHand and lHand then
+            firetouchinterest(rHand, root, 1)
+            firetouchinterest(lHand, root, 1)
+            firetouchinterest(rHand, root, 0)
+            firetouchinterest(lHand, root, 0)
         end
     end
 end
+
+-- Тоггл для автоматической атаки
+local Toggle = Tabs.Main:AddToggle("AutoAttackToggle", {
+    Title = "Auto Attack Selected Player",
+    Default = false,
+    Callback = function(state)
+        punchActive = state
+        autoKill = state
+        
+        -- Очищаем предыдущие соединения
+        if punchConnection then
+            punchConnection:Disconnect()
+            punchConnection = nil
+        end
+        
+        if killConnection then
+            killConnection:Disconnect()
+            killConnection = nil
+        end
+        
+        if state then
+            -- Основной цикл атаки
+            punchConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                attackSelectedPlayer()
+            end)
+            
+            -- Обработчик респавна
+            killConnection = game.Players.LocalPlayer.CharacterAdded:Connect(function()
+                if punchActive then
+                    task.wait(0.5)
+                    attackSelectedPlayer()
+                end
+            end)
+        end
+    end
+})
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
