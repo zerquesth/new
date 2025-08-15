@@ -2122,9 +2122,10 @@ local Toggle25 = Tabs.Misc:AddToggle("AutoSpinWheel",
 })
 
 local Toggle26 = Tabs.Misc:AddToggle("AntiKnockback", 
+local Toggle = Tabs.Misc:AddToggle("AntiKnockback", 
 {
     Title = "Anti Knockback", 
-    Description = "Защищает от отбрасывания",
+    Description = "Защищает от отбрасывания (не замораживает при выключении)",
     Default = false,
     Callback = function(state)
         _G.AntiKnockback = state
@@ -2142,12 +2143,20 @@ local Toggle26 = Tabs.Misc:AddToggle("AntiKnockback",
                         existingVelocity:Destroy()
                     end
                     
-                    -- Создаем новый
+                    -- Создаем новый BodyVelocity, но с учетом текущей скорости
                     local bodyVelocity = Instance.new("BodyVelocity")
                     bodyVelocity.MaxForce = Vector3.new(100000, 0, 100000)
-                    bodyVelocity.Velocity = Vector3.new(0, 0, 0)
+                    bodyVelocity.Velocity = rootPart.AssemblyLinearVelocity -- Сохраняем текущую скорость
                     bodyVelocity.P = 1250
                     bodyVelocity.Parent = rootPart
+                    
+                    -- Обновляем скорость в реальном времени
+                    game:GetService("RunService").Heartbeat:Connect(function()
+                        if not _G.AntiKnockback or not bodyVelocity or not bodyVelocity.Parent then
+                            return
+                        end
+                        bodyVelocity.Velocity = rootPart.AssemblyLinearVelocity
+                    end)
                     
                     -- Ждем смерти или отключения
                     player.CharacterAdded:Wait()
@@ -2155,7 +2164,7 @@ local Toggle26 = Tabs.Misc:AddToggle("AntiKnockback",
                 end
             end)
         else
-            -- При отключении удаляем BodyVelocity
+            -- При отключении просто удаляем BodyVelocity, не сбрасывая скорость
             local player = game.Players.LocalPlayer
             if player.Character then
                 local rootPart = player.Character:FindFirstChild("HumanoidRootPart")
