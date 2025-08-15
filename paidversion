@@ -565,7 +565,7 @@ local Toggle6 = Tabs.Main:AddToggle("MyToggle",
                     -- РђРєС‚РёРІР°С†РёСЏ СѓРґР°СЂР° СЃ РѕР±С‹С‡РЅРѕР№ СЃРєРѕСЂРѕСЃС‚СЊСЋ
                     punchTool:Activate()
                 end
-                task.wait(0.05) -- РРЅС‚РµСЂРІР°Р» РјРµР¶РґСѓ СѓРґР°СЂР°РјРё (РјРѕР¶РЅРѕ СЂРµРіСѓР»РёСЂРѕРІР°С‚СЊ)
+                task.wait(0.01) -- РРЅС‚РµСЂРІР°Р» РјРµР¶РґСѓ СѓРґР°СЂР°РјРё (РјРѕР¶РЅРѕ СЂРµРіСѓР»РёСЂРѕРІР°С‚СЊ)
             end
         end
         
@@ -589,7 +589,7 @@ local function attackPlayers()
     -- РќР°СЃС‚СЂРѕР№РєР° Р±С‹СЃС‚СЂРѕР№ Р°С‚Р°РєРё
     local punch = player.Backpack:FindFirstChild("Punch") or (player.Character and player.Character:FindFirstChild("Punch"))
     if punch and punch:FindFirstChild("attackTime") then
-        punch.attackTime.Value = 0.05
+        punch.attackTime.Value = 0.01
     end
     
     -- РђС‚Р°РєР° РІСЃРµС… РёРіСЂРѕРєРѕРІ
@@ -659,79 +659,6 @@ local Toggle26 = Tabs.Main:AddToggle("MyToggle",
 
 local Section4 = Tabs.Main:AddSection("Target")
 
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-
--- Создаем Dropdown для выбора цели
-local Dropdown = Tabs.Main:AddDropdown("TargetDropdown", {
-    Title = "Выберите цель",
-    Values = {},
-    Multi = false,
-    Default = nil,
-})
-
-local Toggle = Tabs.Main:AddToggle("TargetLockToggle", {
-    Title = "Закрепить цель",
-    Default = false,
-    Callback = function(state)
-        targetLockActive = state
-        
-        if state then
-            local targetName = Dropdown.Value
-            if not targetName then
-                warn("⚠️ Игрок не выбран!")
-                Toggle:SetValue(false)
-                return
-            end
-            
-            local targetPlayer = Players:FindFirstChild(targetName)
-            if not targetPlayer then
-                warn("🚨 Игрок не найден!")
-                Toggle:SetValue(false)
-                return
-            end
-            
-            -- Сохраняем цель в глобальную переменную
-            _G.TargetPlayer = targetPlayer
-            
-            -- Обработчик появления персонажа у цели
-            _G.characterConnection = targetPlayer.CharacterAdded:Connect(function(character)
-                _G.TargetCharacter = character
-                warn("🎯 Персонаж цели обновлен: "..targetName)
-            end)
-            
-            -- Устанавливаем текущего персонажа как цель (если есть)
-            if targetPlayer.Character then
-                _G.TargetCharacter = targetPlayer.Character
-            end
-            
-            warn("🔒 Цель закреплена: "..targetName)
-        else
-            -- Отключаем закрепление
-            if _G.characterConnection then 
-                _G.characterConnection:Disconnect() 
-            end
-            _G.TargetPlayer = nil
-            _G.TargetCharacter = nil
-            warn("🟢 Цель сброшена")
-        end
-    end
-})
-
--- Обновляем список игроков
-local function updatePlayerList()
-    local playerNames = {}
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer then
-            table.insert(playerNames, player.Name)
-        end
-    end
-    Dropdown:SetValues(playerNames)
-local autoEquip = false
-local punchActive = false
-local punchConnection = nil
-local autoKill = false
-local killConnection = nil
 local autoEquip = false
 local punchActive = false
 local punchConnection = nil
