@@ -641,7 +641,7 @@ end
 
 local Toggle25 = Tabs.Main:AddToggle("MyToggle", 
 {
-    Title = "Auto Good Karma", 
+    Title = "Auto Good Karma (Soon)", 
     Default = false,
     Callback = function(state)
       --С„СѓРЅРєС†РёСЏ
@@ -650,7 +650,7 @@ local Toggle25 = Tabs.Main:AddToggle("MyToggle",
 
 local Toggle26 = Tabs.Main:AddToggle("MyToggle", 
 {
-    Title = "Auto Bad Karma", 
+    Title = "Auto Bad Karma (Soon)", 
     Default = false,
     Callback = function(state)
       --С„СѓРЅРєС†РёСЏ
