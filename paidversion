@@ -2103,7 +2103,7 @@ Tabs.Misc:AddButton({
     end
 })
 
-local Toggle25 = Tab:AddToggle("AutoSpinWheel", 
+local Toggle25 = Tabs.Misc:AddToggle("AutoSpinWheel", 
 {
     Title = "Auto Spin Wheel", 
     Description = "Автоматически крутит колесо фортуны",
