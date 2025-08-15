@@ -2121,6 +2121,38 @@ local Toggle25 = Tabs.Misc:AddToggle("AutoSpinWheel",
     end 
 })
 
+local Toggle26 = Tabs.Misc:AddToggle("LockPosition", 
+{
+    Title = "Lock Position", 
+    Description = "Полностью фиксирует позицию персонажа",
+    Default = false,
+    Callback = function(state)
+        _G.LockPosition = state
+        
+        if state then
+            spawn(function()
+                local startPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+                local humanoid = game.Players.LocalPlayer.Character.Humanoid
+                
+                -- Отключаем возможность прыгать
+                humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
+                
+                while _G.LockPosition and wait() do
+                    -- Фиксируем позицию и обнуляем скорость
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = startPosition
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+                    humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+                end
+            end)
+        else
+            -- Возвращаем возможность прыгать при отключении
+            if game.Players.LocalPlayer.Character then
+                game.Players.LocalPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+            end
+        end
+    end 
+})
+
 Tabs.Misc:AddButton({
     Title = "Rebirth Counter",
     Callback = function()
