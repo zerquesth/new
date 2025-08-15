@@ -593,21 +593,7 @@ local function attackPlayers()
     end
     
     -- РђС‚Р°РєР° РІСЃРµС… РёРіСЂРѕРєРѕРІ
-    for _, target in ipairs(game.Players:GetPlayers()) do
-        if target ~= player then
-            local root = target.Character and target.Character:FindFirstChild("HumanoidRootPart")
-            local rHand = player.Character and player.Character:FindFirstChild("RightHand")
-            local lHand = player.Character and player.Character:FindFirstChild("LeftHand")
-            
- if root and rHand and lHand then
-                firetouchinterest(rHand, root, 1)
-local autoEquip = false
-local punchActive = false
-local punchConnection = nil
-
-local Toggle6 = Tabs.Main:AddToggle("MyToggle", 
-{
-    Title = "Auto Fast Punch", 
+Title = "Auto Fast Punch", 
     Default = false,
     Callback = function(state)
         punchActive = state
@@ -658,6 +644,10 @@ local Toggle6 = Tabs.Main:AddToggle("MyToggle",
         end 
     end
 })
+
+local autoEquip = false
+local punchActive = false
+local punchConnection = nil
 
 local autoKill = false
 local connection = nil
