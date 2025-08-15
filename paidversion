@@ -2103,6 +2103,24 @@ Tabs.Misc:AddButton({
     end
 })
 
+local Toggle25 = Tab:AddToggle("AutoSpinWheel", 
+{
+    Title = "Auto Spin Wheel", 
+    Description = "Автоматически крутит колесо фортуны",
+    Default = false,
+    Callback = function(state)
+        _G.AutoSpinWheel = state
+        
+        if state then
+            spawn(function()
+                while _G.AutoSpinWheel and wait(1) do
+                    game:GetService("ReplicatedStorage").rEvents.openFortuneWheelRemote:InvokeServer("openFortuneWheel", game:GetService("ReplicatedStorage").fortuneWheelChances["Fortune Wheel"])
+                end
+            end)
+        end
+    end 
+})
+
 Tabs.Misc:AddButton({
     Title = "Rebirth Counter",
     Callback = function()
