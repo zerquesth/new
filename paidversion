@@ -559,7 +559,7 @@ local Toggle6 = Tabs.Main:AddToggle("MyToggle",
                     -- РђРІС‚Рѕ-СЌРєРёРїРёСЂРѕРІРєР°
                     if punchTool.Parent ~= char then
                         char:WaitForChild("Humanoid"):EquipTool(punchTool)
-                        task.wait(0.1) -- Р”Р°РµРј РІСЂРµРјСЏ РЅР° СЌРєРёРїРёСЂРѕРІРєСѓ
+                        task.wait(0.01) -- Р”Р°РµРј РІСЂРµРјСЏ РЅР° СЌРєРёРїРёСЂРѕРІРєСѓ
                     end
                     
                     -- РђРєС‚РёРІР°С†РёСЏ СѓРґР°СЂР° СЃ РѕР±С‹С‡РЅРѕР№ СЃРєРѕСЂРѕСЃС‚СЊСЋ
