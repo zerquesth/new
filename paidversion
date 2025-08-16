@@ -2178,6 +2178,25 @@ local Toggle26 = Tabs.Misc:AddToggle("AntiKnockback",
     end 
 })
 
+local Toggle27 = Tabs.Misc:AddToggle("AutoClaimGiftsToggle", 
+{
+    Title = "Auto Claim Gifts", 
+    Default = false,
+    Callback = function(state)
+        _G.AutoClaimGifts = state
+        
+        if state then
+            spawn(function()
+                while _G.AutoClaimGifts and wait(1) do
+                    for i = 1, 8 do
+                        game:GetService("ReplicatedStorage").rEvents.freeGiftClaimRemote:InvokeServer("claimGift", i)
+                    end
+                end
+            end)
+        end
+    end
+})
+
 Tabs.Misc:AddButton({
     Title = "Rebirth Counter",
     Callback = function()
