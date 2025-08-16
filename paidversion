@@ -639,7 +639,7 @@ local Toggle7 = Tabs.Main:AddToggle("MyToggle",
 end
 })
 
-local Toggle25 = Tabs.Boost:AddToggle("AutoKillGoodKarma", 
+local Toggle8 = Tabs.Boost:AddToggle("AutoKillGoodKarma", 
 {
     Title = "Auto Kill Good Karma", 
     Description = "Автоматически атакует игроков с хорошей кармой (работает даже после смерти)",
