@@ -639,13 +639,38 @@ local Toggle7 = Tabs.Main:AddToggle("MyToggle",
 end
 })
 
-local Toggle25 = Tabs.Main:AddToggle("MyToggle", 
+local Toggle25 = Tabs.Boost:AddToggle("AutoKillGoodKarma", 
 {
-    Title = "Auto Good Karma (Soon)", 
+    Title = "Auto Kill Good Karma", 
+    Description = "Автоматически атакует игроков с хорошей кармой (работает даже после смерти)",
     Default = false,
     Callback = function(state)
-      --С„СѓРЅРєС†РёСЏ
-    end
+        _G.AutoKillGoodKarma = state
+        
+        if state then
+            spawn(function()
+                while _G.AutoKillGoodKarma do
+                    task.wait(0.1)
+                    
+                    -- Проверяем, жив ли игрок, иначе ждем респавна
+                    if not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                        LocalPlayer.CharacterAdded:Wait()  -- Ждем, пока игрок зареспавнится
+                        task.wait(1)  -- Даем время на загрузку модели
+                    end
+                    
+                    -- Проверяем, есть ли игроки с хорошей кармой
+                    for _, player in ipairs(Players:GetPlayers()) do
+                        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("Karma") and player.Character.Karma.Value > 0 then
+                            -- Телепортируемся к цели и атакуем
+                            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(player.Character.HumanoidRootPart.Position)
+                            ReplicatedStorage.muscleEvent:FireServer("punch", "rightHand")
+                            ReplicatedStorage.muscleEvent:FireServer("punch", "leftHand")
+                        end
+                    end
+                end
+            end)
+        end
+    end 
 })
 
 local Toggle26 = Tabs.Main:AddToggle("MyToggle", 
