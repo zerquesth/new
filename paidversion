@@ -1968,7 +1968,7 @@ local Toggle21 = Tabs.Misc:AddToggle("MyToggle",
     Title = "Walk On Water", 
     Default = false,  -- По умолчанию выключено
     Callback = function(state)
-        local part = workspace.Part_Side_1_3
+        local part = Workspace.Part_Side_1_3
         part.CanCollide = state  -- true = сталкиваемая, false = нет
     end
 })
