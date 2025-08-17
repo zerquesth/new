@@ -1971,7 +1971,7 @@ local Toggle21 = Tabs.Misc:AddToggle("MyToggle",
         local part = workspace.Part_Side_1_3
         part.CanCollide = state  -- true = сталкиваемая, false = нет
     end
-}
+})
 
 local Toggle22 = Tabs.Misc:AddToggle("MyToggle", 
 {
