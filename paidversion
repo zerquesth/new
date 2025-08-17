@@ -1966,28 +1966,12 @@ local Section10 = Tabs.Misc:AddSection("idk what to type here")
 local Toggle21 = Tabs.Misc:AddToggle("MyToggle", 
 {
     Title = "Walk On Water", 
-    Default = false,
+    Default = false,  -- По умолчанию выключено
     Callback = function(state)
-	if state then
-        -- Р’РєР»СЋС‡Р°РµРј РїР»Р°С‚С„РѕСЂРјСѓ
-        local platform = Instance.new("Part")
-        platform.Name = "FullMapPlatform"
-        platform.Size = Vector3.new(50000, 10, 50000)
-        platform.Position = Vector3.new(0, -10, 0)
-        platform.Anchored = true
-        platform.CanCollide = true
-        platform.Transparency = 0.5
-        platform.Parent = workspace
-        getgenv().platform = platform  -- РЎРѕС…СЂР°РЅСЏРµРј РІ РїРµСЂРµРјРµРЅРЅСѓСЋ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ
-    else
-        -- Р’С‹РєР»СЋС‡Р°РµРј Рё СѓРґР°Р»СЏРµРј РїР»Р°С‚С„РѕСЂРјСѓ
-        if getgenv().platform then
-            getgenv().platform:Destroy()
-            getgenv().platform = nil
-        end
+        local part = workspace.Part_Side_1_3
+        part.CanCollide = state  -- true = сталкиваемая, false = нет
     end
-end
-})
+}
 
 local Toggle22 = Tabs.Misc:AddToggle("MyToggle", 
 {
